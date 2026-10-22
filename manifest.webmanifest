@@ -1,0 +1,26 @@
+{
+  "name": "NL25 → 職業選手 培訓教材",
+  "short_name": "撲克培訓",
+  "description": "NL25 6-max 現金桌到職業選手的完整培訓教材",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07110e",
+  "theme_color": "#0b1f19",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

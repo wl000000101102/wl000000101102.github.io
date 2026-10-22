@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1f19">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="撲克培訓">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="資金管理、變異數、tilt、職業作息">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<title>心理、資金、流程與職業化 · NL25 → 職業選手 培訓教材</title>
+<style>
+:root{--bg:#07110e;--bg2:#0b1f19;--paper:rgba(16,32,26,.78);--paper2:rgba(255,255,255,.045);--ink:#ebe8e1;--muted:#a9b5ae;
+--accent:#f3c957;--accent2:#39d98a;--line:rgba(255,255,255,.12);--red:#ff7b7b;
+--intro:rgba(57,217,138,.10);--example:rgba(243,201,87,.10);--warn:rgba(255,140,66,.13);--why:rgba(150,130,255,.14);--terms:rgba(243,201,87,.07);
+--tip-bg:#fffdf5;--tip-ink:#1b1b1b;--shadow:0 24px 70px rgba(0,0,0,.45);--radius:16px}
+[data-theme="light"]{--bg:#eef2f0;--bg2:#e3eae6;--paper:#fff;--paper2:#f5f8f6;--ink:#1f2328;--muted:#5a6660;--accent:#b8860b;--accent2:#1a7f4f;
+--line:#d8dedb;--red:#c81e1e;--intro:#e9f6ee;--example:#fff6dc;--warn:#fff0e3;--why:#f0ecff;--terms:#fff8df;--tip-bg:#1f2328;--tip-ink:#fff;--shadow:0 12px 36px rgba(0,0,0,.10)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Helvetica Neue",Arial,sans-serif;font-size:17px;line-height:1.85;color:var(--ink);
+background:var(--bg);background-image:radial-gradient(1100px 600px at 8% -10%,rgba(57,217,138,.22),transparent 60%),radial-gradient(900px 500px at 100% 0%,rgba(243,201,87,.14),transparent 55%),linear-gradient(180deg,var(--bg2),var(--bg) 70%);background-attachment:fixed;
+padding-bottom:env(safe-area-inset-bottom)}
+[data-theme="light"] body{background-image:radial-gradient(1100px 600px at 8% -10%,rgba(26,127,79,.14),transparent 60%),radial-gradient(900px 500px at 100% 0%,rgba(184,134,11,.12),transparent 55%),linear-gradient(180deg,var(--bg2),var(--bg) 70%)}
+a{color:var(--accent2)}
+[data-theme="light"] a{color:#0b6b3a}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));z-index:60;box-shadow:0 0 12px var(--accent)}
+.topbar{position:-webkit-sticky;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top));
+background:rgba(7,17,14,.94);border-bottom:1px solid var(--line);isolation:isolate}
+[data-theme="light"] .topbar{background:rgba(255,255,255,.96)}
+.topbar .brand{display:flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;color:var(--ink);letter-spacing:.02em}
+.topbar .brand svg{width:26px;height:26px}
+.topbar .spacer{flex:1}
+.topbar a.quick,.topbar button.tb{font:inherit;font-size:.9em;text-decoration:none;padding:5px 11px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:var(--paper2);cursor:pointer;transition:.2s}
+.topbar a.quick:hover,.topbar button.tb:hover{border-color:var(--accent);transform:translateY(-1px)}
+#navToggle{display:none;min-width:44px;min-height:44px;font-size:22px;line-height:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:55}
+.sb-close{display:none;position:absolute;top:calc(10px + env(safe-area-inset-top));right:10px;min-width:44px;min-height:44px;font-size:22px;border:1px solid var(--line);border-radius:10px;background:var(--paper2);color:var(--ink);cursor:pointer}
+.overlay.show{display:block}
+.layout{display:flex;align-items:flex-start}
+.sidebar{width:300px;flex:0 0 300px;position:sticky;top:57px;height:calc(100vh - 57px);overflow:auto;padding:16px 14px 30px;background:var(--paper);backdrop-filter:blur(10px);border-right:1px solid var(--line)}
+.sb-progress{display:flex;align-items:center;gap:12px;padding:8px 8px 14px;border-bottom:1px solid var(--line);margin-bottom:10px;font-size:.92em}
+.sb-progress svg{width:52px;height:52px;flex:0 0 52px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--line);stroke-width:3.5}
+.ring-fg{fill:none;stroke:var(--accent2);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .6s ease}
+.sidebar h2{font-size:.8em;color:var(--muted);margin:8px 8px 6px;letter-spacing:.12em;text-transform:uppercase;border:none;padding:0}
+.sidebar ol{list-style:none;padding:0;margin:0}
+.sidebar li{display:flex;align-items:center;gap:6px;margin:2px 0}
+.sidebar li a{flex:1;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;text-decoration:none;color:var(--ink);font-size:.93em;line-height:1.35;transition:.18s}
+.sidebar li a:hover{background:var(--paper2);transform:translateX(3px)}
+.sidebar li a.current{background:linear-gradient(90deg,rgba(243,201,87,.28),rgba(57,217,138,.18));border:1px solid rgba(243,201,87,.45);font-weight:700}
+.sidebar .step{color:var(--muted);font-size:.82em;min-width:20px}
+.sidebar .ico{font-size:1.05em}
+.sidebar .mark{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:transparent;cursor:pointer;font-size:12px;line-height:1;flex:0 0 22px;transition:.2s}
+.sidebar li.read .mark{background:var(--accent2);border-color:var(--accent2);color:#06201a}
+.sidebar li.read a{opacity:.75}
+.content{flex:1;min-width:0;padding:26px 28px 90px}
+article{max-width:1000px;margin:0 auto;background:var(--paper);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:30px 44px 48px;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);position:relative}
+.hero{position:relative;overflow:hidden;border-radius:14px;padding:26px 30px 22px;margin:0 0 22px;background:linear-gradient(135deg,rgba(243,201,87,.18),rgba(57,217,138,.12) 60%,rgba(255,255,255,.02));border:1px solid var(--line)}
+.hero-kicker{font-size:.86em;color:var(--muted);letter-spacing:.08em;margin-bottom:6px}
+.hero h1{margin:0;font-size:1.95em;line-height:1.28;background:linear-gradient(90deg,var(--ink) 0%,var(--accent) 45%,var(--ink) 90%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite}
+.hero-suit{position:absolute;right:-10px;bottom:-40px;font-size:150px;line-height:1;opacity:.08;pointer-events:none;transform:rotate(-12deg);color:var(--accent)}
+@keyframes shimmer{0%{background-position:0% center}100%{background-position:220% center}}
+h2{font-size:1.4em;margin-top:2.3em;padding-left:14px;border-left:5px solid var(--accent);line-height:1.35;position:relative}
+h2::after{content:"";display:block;height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:8px}
+h3{font-size:1.14em;margin-top:1.7em;color:var(--ink)}
+h3::before{content:"◆";color:var(--accent2);font-size:.6em;margin-right:8px;vertical-align:middle}
+h4{font-size:1em;margin-top:1.3em}
+p{margin:.8em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2em 0}
+ul,ol{padding-left:1.6em}
+li{margin:.3em 0}
+li.task{list-style:none;margin-left:-1.4em}
+.cb{display:inline-block;width:1.4em;color:var(--accent)}
+strong{color:var(--accent)}
+[data-theme="light"] strong{color:#7a5a05}
+code{background:var(--paper2);padding:1px 6px;border-radius:4px;font-size:.92em;border:1px solid var(--line)}
+pre{background:rgba(0,0,0,.28);padding:14px 16px;overflow:auto;border-radius:10px;font-size:.92em;line-height:1.6;border:1px solid var(--line)}
+[data-theme="light"] pre{background:#f4f6f5}
+pre code{background:none;padding:0;border:none}
+.table-wrap{overflow-x:auto;margin:1em 0;border-radius:12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:9px 12px;vertical-align:top;text-align:left}
+th:last-child,td:last-child{border-right:none}
+thead th{background:linear-gradient(180deg,rgba(243,201,87,.22),rgba(243,201,87,.08));font-weight:700;position:sticky;top:0}
+tbody tr:nth-child(even){background:rgba(255,255,255,.025)}
+[data-theme="light"] tbody tr:nth-child(even){background:#f7f9f8}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:rgba(57,217,138,.10)}
+blockquote{margin:1em 0;padding:10px 16px;background:var(--paper2);border-left:4px solid var(--line);color:var(--muted);border-radius:0 10px 10px 0}
+.callout{border-left:5px solid;padding:14px 18px;margin:1.3em 0;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.12);transition:transform .2s,box-shadow .2s}
+.callout:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.2)}
+.callout-title{font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.callout .ci{font-size:1.15em}
+.callout.intro{background:var(--intro);border-color:var(--accent2)}
+.callout.example{background:var(--example);border-color:var(--accent)}
+.callout.warn{background:var(--warn);border-color:#ff8c42}
+.callout.why{background:var(--why);border-color:#9b86ff}
+details.chapter-terms{background:var(--terms);border:1px solid rgba(243,201,87,.35);border-radius:12px;padding:10px 18px;margin:0 0 20px}
+details.chapter-terms summary{cursor:pointer;font-weight:700;padding:4px 0}
+details.chapter-terms dl{margin:8px 0 0}
+.term-entry{padding:10px 0;border-bottom:1px dashed rgba(243,201,87,.35)}
+.term-entry:last-child{border-bottom:none}
+.term-entry dt{font-weight:800;color:var(--accent);font-size:1.02em}
+.term-entry dd{margin:2px 0 0}
+.term-entry p{margin:3px 0}
+.term-entry .short{font-weight:600}
+.term-entry .example{background:var(--paper2);border-radius:8px;padding:6px 10px;border:1px solid var(--line)}
+details.toc{background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:8px 18px;margin:0 0 22px}
+details.toc summary{cursor:pointer;font-weight:700}
+details.toc ol{margin:8px 0 4px}
+details.toc li{margin:.15em 0}
+details.toc .lvl3{margin-left:1.2em;font-size:.93em}
+details.toc a{text-decoration:none;color:var(--ink);opacity:.85}
+details.toc a.active{color:var(--accent);font-weight:700;opacity:1}
+a.term{color:inherit;text-decoration:none;border-bottom:1px dotted var(--accent);position:relative;cursor:help}
+a.term::after{content:"?";font-size:.66em;vertical-align:super;color:var(--accent);margin-left:1px}
+a.term:hover::before,a.term.show::before{content:attr(data-tip);position:absolute;left:0;top:100%;z-index:70;background:var(--tip-bg);color:var(--tip-ink);padding:9px 12px;border-radius:10px;font-size:14px;line-height:1.55;width:max-content;max-width:380px;white-space:normal;box-shadow:0 10px 30px rgba(0,0,0,.35);margin-top:6px;font-weight:400;border:1px solid rgba(0,0,0,.1)}
+.pc{display:inline-block;min-width:1.55em;padding:0 .3em;margin:0 1px;border-radius:.32em;background:#fff;color:#111;font-weight:800;font-family:"Helvetica Neue",Arial,sans-serif;line-height:1.45;border:1px solid #c9c9c9;box-shadow:0 1px 2px rgba(0,0,0,.25);font-size:.92em;vertical-align:baseline}
+.pc.red{color:#d11a2a}
+.pc i{font-style:normal;margin-left:1px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:44px;padding-top:18px;border-top:1px solid var(--line)}
+.pager a{text-decoration:none;padding:10px 16px;border:1px solid var(--line);border-radius:12px;max-width:48%;color:var(--ink);background:var(--paper2);transition:.2s}
+.pager a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.g-cat{margin-top:2.4em}
+.g-entry{padding:14px 0;border-bottom:1px solid var(--line);scroll-margin-top:80px}
+.g-entry:target{background:var(--terms);border-radius:10px;padding:14px;animation:flash 1.6s}
+@keyframes flash{0%{box-shadow:0 0 0 0 rgba(243,201,87,.7)}100%{box-shadow:0 0 0 18px rgba(243,201,87,0)}}
+.g-entry h3{margin:0 0 4px;color:var(--accent);font-size:1.15em}
+.g-entry h3::before{content:none}
+.g-entry .aliases{color:var(--muted);font-size:.9em;margin:0 0 4px}
+.g-entry p{margin:4px 0}
+.g-entry .short{font-weight:600}
+.g-entry .example{background:var(--example);border-radius:8px;padding:6px 10px}
+#gsearch{width:100%;font:inherit;font-size:1.05em;padding:12px 16px;border:1px solid var(--line);border-radius:12px;margin:8px 0 14px;background:var(--paper2);color:var(--ink)}
+.g-index a{display:inline-block;margin:3px 8px 3px 0;font-size:.95em;padding:3px 10px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink)}
+.hint{color:var(--muted);font-size:.92em}
+.banner{background:var(--intro);border:1px solid rgba(57,217,138,.35);border-radius:12px;padding:12px 18px;margin-bottom:20px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+.backtop{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--accent);font-size:20px;cursor:pointer;opacity:0;pointer-events:none;transition:.25s;z-index:55;box-shadow:var(--shadow)}
+.backtop.show{opacity:1;pointer-events:auto}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);background:var(--accent);color:#1a1200;padding:10px 18px;border-radius:999px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:80;box-shadow:0 10px 30px rgba(0,0,0,.4);cursor:pointer}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.suits{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:-1;overflow:hidden}
+.suits span{position:absolute;bottom:-12vh;opacity:0;animation:floatUp linear infinite;will-change:transform;pointer-events:none}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:var(--o)}90%{opacity:var(--o)}100%{transform:translateY(-125vh) rotate(25deg);opacity:0}}
+.layout{position:relative}
+/* widgets */
+.widget{margin:1.4em 0;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--paper2);box-shadow:0 8px 26px rgba(0,0,0,.14)}
+.widget-title{font-weight:800;margin-bottom:10px;color:var(--accent)}
+.widget-caption{color:var(--muted);font-size:.92em;margin-top:8px}
+.table-svg{width:100%;height:auto;display:block;max-width:680px;margin:0 auto}
+.table-svg .seat circle{fill:#15261f;stroke:var(--accent2);stroke-width:3}
+.table-svg .seat.btn circle{fill:var(--accent);stroke:#fff}
+.table-svg .seat-name{fill:#fff;font-weight:800;font-size:16px}
+.table-svg .seat.btn .seat-name{fill:#1a1200}
+.table-svg .badge{fill:var(--accent)!important;stroke:#1a1200!important;stroke-width:1.5!important}
+.table-svg .badge-text{fill:#1a1200;font-size:13px;font-weight:800}
+.table-svg .felt-text{fill:#dff5e8;font-size:15px;font-weight:700}
+.table-svg .felt-text.small{font-size:12px;font-weight:400;opacity:.9}
+.rg-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:2px;max-width:640px}
+.rg-cell{font-size:11px;line-height:1;padding:6px 0;text-align:center;border-radius:4px;font-weight:700;letter-spacing:-.02em;transition:transform .15s}
+.rg-cell:hover{transform:scale(1.25);z-index:2;position:relative}
+.rg-cell.on{background:linear-gradient(180deg,#ff7a6b,#d93b3b);color:#fff}
+.rg-cell.off{background:rgba(255,255,255,.07);color:var(--muted)}
+[data-theme="light"] .rg-cell.off{background:#e8ecea;color:#7a8580}
+.rg-legend{margin-top:10px;font-size:.92em;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.rg-legend .sw{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle;margin-right:4px}
+.rg-legend .sw.on{background:#e04848}.rg-legend .sw.off{background:rgba(255,255,255,.2);border:1px solid var(--line)}
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.calc-box{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.calc-box h4{margin:0 0 10px;font-size:1em}
+.calc-box label{display:block;font-size:.92em;color:var(--muted);margin:6px 0}
+.calc-box input[type=number],.ladder-input input{display:block;width:100%;font:inherit;font-size:1.05em;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper2);color:var(--ink);margin-top:3px}
+.calc-box input[type=range]{width:100%;accent-color:var(--accent)}
+.calc-out{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(57,217,138,.10);border:1px solid rgba(57,217,138,.3);font-size:.95em;line-height:1.7}
+.calc-out .big{font-size:1.3em;color:var(--accent)}
+.ladder-input label{display:block;color:var(--muted);font-size:.92em;max-width:300px}
+.ladder-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.lstep{padding:12px 10px;border-radius:12px;border:1px solid var(--line);background:var(--paper);text-align:center;transition:.25s;position:relative}
+.lstep .ln{font-weight:900;font-size:1.25em}
+.lstep .lb{font-size:.8em;color:var(--muted)}
+.lstep .lt{font-size:.82em;margin-top:6px;line-height:1.5}
+.lstep.active{border-color:var(--accent);background:linear-gradient(180deg,rgba(243,201,87,.25),rgba(243,201,87,.06));transform:translateY(-4px);box-shadow:0 10px 24px rgba(243,201,87,.2)}
+.lstep.active::before{content:"你在這裡";position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#1a1200;font-size:.72em;font-weight:800;padding:2px 10px;border-radius:999px}
+.lstep.done{opacity:.55}
+.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:8px 0}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:999px;transition:width .5s}
+.warnline{color:#ff9d6c;font-weight:700}
+.roadmap{position:relative;padding-left:14px}
+.rm-item{display:flex;gap:14px;position:relative;padding:10px 0 14px}
+.rm-item::before{content:"";position:absolute;left:19px;top:44px;bottom:-6px;width:2px;background:linear-gradient(180deg,var(--accent),rgba(243,201,87,.1))}
+.rm-item:last-child::before{display:none}
+.rm-dot{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#c9962a);color:#1a1200;font-weight:900;display:flex;align-items:center;justify-content:center;flex:0 0 40px;box-shadow:0 6px 16px rgba(243,201,87,.35)}
+.rm-body{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px;transition:.2s}
+.rm-item:hover .rm-body{transform:translateX(4px);border-color:var(--accent)}
+.rm-title{font-weight:800}
+.rm-meta,.rm-gate{font-size:.9em;color:var(--muted)}
+.rm-gate{color:var(--ink);opacity:.9}
+.chapters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;padding:0;background:none;border:none;box-shadow:none}
+.chap-card{display:block;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;transition:.22s;position:relative;overflow:hidden}
+.chap-card::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(243,201,87,.0),rgba(57,217,138,.0));transition:.3s}
+.chap-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 16px 36px rgba(0,0,0,.3)}
+.chap-card:hover::after{background:linear-gradient(135deg,rgba(243,201,87,.12),rgba(57,217,138,.10))}
+.chap-icon{font-size:1.8em;line-height:1}
+.chap-num{font-size:.78em;color:var(--muted);margin-top:8px;letter-spacing:.08em}
+.chap-title{font-weight:800;margin-top:2px;line-height:1.3}
+.chap-desc{font-size:.86em;color:var(--muted);margin-top:4px;line-height:1.5}
+@media (max-width:980px){
+ #navToggle{display:inline-flex;align-items:center;justify-content:center}
+ .sb-close{display:inline-flex;align-items:center;justify-content:center}
+ .sidebar{position:fixed;left:-320px;top:0;height:100vh;height:100dvh;padding-top:calc(64px + env(safe-area-inset-top));transition:left .25s;z-index:60;box-shadow:0 0 30px rgba(0,0,0,.35);background:var(--bg2);-webkit-overflow-scrolling:touch}
+ .sidebar.open{left:0}
+ .content{padding:12px 10px 90px}
+ article{padding:18px 16px 36px}
+ .hero{padding:18px 18px 16px}
+ .hero h1{font-size:1.5em}
+ body{font-size:16px}
+ a.term:hover::before,a.term.show::before{max-width:84vw}
+ .ladder-steps{grid-template-columns:repeat(2,1fr)}
+ .topbar a.quick{display:none}
+ .topbar a.quick.keep{display:inline-block}
+}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.suits{display:none}.hero h1{animation:none}}
+@media print{.sidebar,.topbar,.pager,#navToggle,.suits,.backtop,#progress,.toast{display:none}article{border:none;max-width:none;background:#fff;color:#000}body{background:#fff}a.term::after{display:none}a.term{border:none}}
+</style>
+</head>
+<body data-page="07.html" data-total="15">
+<div id="progress"></div>
+<div class="suits" aria-hidden="true"><span style="left:29%;font-size:41px;color:#f3c957;animation-duration:34s;animation-delay:-8s;--o:0.07">♠</span><span style="left:5%;font-size:23px;color:#39d98a;animation-duration:26s;animation-delay:-15s;--o:0.11">♥</span><span style="left:64%;font-size:31px;color:#ffffff;animation-duration:34s;animation-delay:-1s;--o:0.09">♦</span><span style="left:58%;font-size:42px;color:#ff7b7b;animation-duration:37s;animation-delay:-36s;--o:0.07">♣</span><span style="left:51%;font-size:23px;color:#f3c957;animation-duration:37s;animation-delay:-14s;--o:0.11">♠</span><span style="left:89%;font-size:35px;color:#39d98a;animation-duration:38s;animation-delay:-26s;--o:0.09">♥</span><span style="left:48%;font-size:25px;color:#ffffff;animation-duration:43s;animation-delay:-16s;--o:0.06">♦</span><span style="left:8%;font-size:42px;color:#ff7b7b;animation-duration:41s;animation-delay:-24s;--o:0.06">♣</span><span style="left:7%;font-size:39px;color:#f3c957;animation-duration:29s;animation-delay:-5s;--o:0.09">♠</span><span style="left:83%;font-size:51px;color:#39d98a;animation-duration:28s;animation-delay:-37s;--o:0.11">♥</span><span style="left:77%;font-size:22px;color:#ffffff;animation-duration:39s;animation-delay:-2s;--o:0.09">♦</span><span style="left:24%;font-size:27px;color:#ff7b7b;animation-duration:40s;animation-delay:-29s;--o:0.11">♣</span><span style="left:56%;font-size:36px;color:#f3c957;animation-duration:39s;animation-delay:-22s;--o:0.12">♠</span><span style="left:54%;font-size:26px;color:#39d98a;animation-duration:27s;animation-delay:-38s;--o:0.06">♥</span></div>
+<header class="topbar">
+<button id="navToggle" class="tb" aria-label="目錄">☰</button>
+<a class="brand" href="index.html"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#0f3d2e"/><text x="50" y="74" font-size="66" text-anchor="middle" fill="#f3c957" font-family="Segoe UI Symbol,Apple Symbols,Arial">♠</text></svg><span>撲克培訓</span></a>
+<span class="spacer"></span>
+<button id="themeToggle" class="tb" aria-label="切換深淺色">☀️</button>
+<a class="quick" href="basics.html">新手基礎</a>
+<a class="quick keep" href="glossary.html">名詞表</a>
+<a class="quick" href="install.html">📱 安裝</a>
+</header>
+<div id="overlay" class="overlay"></div>
+<div class="layout">
+<nav class="sidebar" id="sidebar"><button type="button" class="sb-close" id="sbClose" aria-label="關閉目錄">✕</button><div class="sb-progress"><svg viewBox="0 0 36 36"><circle class="ring-bg" cx="18" cy="18" r="15.9" pathLength="100"/><circle id="ringFg" class="ring-fg" cx="18" cy="18" r="15.9" pathLength="100"/></svg><div><b id="readCount">0</b> / 15 章已讀<br><span class="hint">滾到頁尾自動標記；點圓圈可手動切換</span></div></div><h2>閱讀順序</h2><ol><li data-page="basics.html"><a href="basics.html"><span class="step">1.</span><span class="ico">🎓</span><span>新手基礎（先讀這章）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="glossary.html"><a href="glossary.html"><span class="step">2.</span><span class="ico">📖</span><span>名詞表（隨時查）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="index.html"><a href="index.html"><span class="step">3.</span><span class="ico">🗺️</span><span>總覽與職業路線圖</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="10.html"><a href="10.html"><span class="step">4.</span><span class="ico">📅</span><span>個人化課表（N8）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="tracker.html"><a href="tracker.html"><span class="step">5.</span><span class="ico">📊</span><span>打牌紀錄與資金儀表板</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="01.html"><a href="01.html"><span class="step">6.</span><span class="ico">🗓️</span><span>26 週課表（通用版）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="02.html"><a href="02.html"><span class="step">7.</span><span class="ico">🃏</span><span>翻前完整體系</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="03.html"><a href="03.html"><span class="step">8.</span><span class="ico">♠️</span><span>翻後攻略 I：單次加注底池</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="04.html"><a href="04.html"><span class="step">9.</span><span class="ico">♦️</span><span>翻後攻略 II：3-bet 底池等</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="05.html"><a href="05.html"><span class="step">10.</span><span class="ico">🎯</span><span>剝削與對手分析</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="06.html"><a href="06.html"><span class="step">11.</span><span class="ico">🧠</span><span>GTO Wizard 使用手冊</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="07.html"><a href="07.html" class="current"><span class="step">12.</span><span class="ico">💰</span><span>心理、資金、流程與職業化</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="08.html"><a href="08.html"><span class="step">13.</span><span class="ico">✅</span><span>各階段審核檢視與目標</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="09.html"><a href="09.html"><span class="step">14.</span><span class="ico">📝</span><span>模板</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="install.html"><a href="install.html"><span class="step">15.</span><span class="ico">📱</span><span>安裝到 iPhone 主畫面</span></a><button class="mark" title="標記已讀／未讀">✓</button></li></ol></nav>
+<main class="content"><article>
+<div class="hero"><div class="hero-kicker">第 12 章 · 共 15 章 · 約 8 分鐘讀完</div><h1>心理、資金、流程與職業化</h1><div class="hero-suit">♦</div></div><details class="chapter-terms"><summary>📖 本章會用到的名詞（49 個）：點開看白話解釋與範例</summary><p class="hint">內文中帶虛線底線和小問號的詞，滑鼠移上去（手機：點一下）有提示，再點會到名詞表。</p><dl><div class="term-entry" id="ct-bankroll"><dt>資金管理</dt><dd><p class="short">決定用多少錢打哪個級別、什麼時候升級降級的規則。</p><p class="long">資金管理的目的是讓變異數不會把你淘汰。核心是「幾個買入」與升降級門檻，而且資金要和生活費分開。</p><p class="example"><strong>範例：</strong>$100 打 NL2（50 個買入），到 $150 升 NL5。</p><a href="glossary.html#t-bankroll">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-natural8"><dt>Natural8（N8、GG 網路）</dt><dd><p class="short">亞洲常用的線上撲克平台，屬於 GGPoker 網路。禁止 HUD，有 PokerCraft、Rush &amp; Cash、Fish Buffet。</p><p class="long">GG 網路的抽水方式與一般網路不同，GTO Wizard 有專門為 GG 解的範圍，選解時要選 GG 的抽水結構。</p><p class="example"><strong>範例：</strong>在 GTO Wizard 選 Cash → 6-max → 100bb → GG 的抽水結構。</p><a href="glossary.html#t-natural8">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-buyin"><dt>買入（BI）</dt><dd><p class="short">入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。</p><p class="long">買入數是資金夠不夠的量尺。一個 5bb/100 的贏家在 NL25 需要大約 30 到 40 個買入，才能把輸光的機率壓到 5% 以下。</p><p class="example"><strong>範例：</strong>NL2 的買入是 $2，$100 就是 50 個買入。</p><a href="glossary.html#t-buyin">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-sd"><dt>標準差（SD）</dt><dd><p class="short">變異數的量化方式。6-max 現金桌大約是每 100 手 100bb。</p><p class="long">標準差 100bb/100 的意思是：每 100 手的結果通常在平均值上下 100bb 之內晃動。它是計算資金需求和信賴區間的基礎。</p><p class="example"><strong>範例：</strong>勝率 5、標準差 100，10 萬手的 95% 區間是 5 ± 6.3 bb/100。</p><a href="glossary.html#t-sd">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-winrate"><dt>勝率（bb/100）</dt><dd><p class="short">平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。</p><p class="long">勝率不是「贏的手數比例」，而是每 100 手的平均獲利，以 bb 計。NL25 的好玩家大約 4 到 8 bb/100。勝率需要很多手數才看得準。</p><p class="example"><strong>範例：</strong>打了 10 萬手，總共贏 5,000bb，勝率就是 5 bb/100。</p><a href="glossary.html#t-winrate">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-ror"><dt>破產風險（RoR）</dt><dd><p class="short">Risk of Ruin，以目前的資金和勝率，最後把錢輸光的機率。</p><p class="long">資金管理就是把破產風險壓到可接受的水準（例如 5%）。勝率越低、變異數越大，需要的買入數越多。</p><p class="example"><strong>範例：</strong>勝率 5 bb/100，30 個買入的破產風險約 5%，4 個買入接近 100%。</p><a href="glossary.html#t-ror">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-bb100"><dt>bb/100</dt><dd><p class="short">每 100 手的平均獲利，以大盲計。勝率的單位。</p><p class="long">用 bb/100 可以跨級別比較表現。好玩家在微額約 5 到 10 bb/100，在高級別 2 到 4 bb/100。</p><p class="example"><strong>範例：</strong>5 bb/100 在 NL25 等於每 100 手賺 $1.25。</p><a href="glossary.html#t-bb100">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-stakes"><dt>級別（NL2、NL25…）</dt><dd><p class="short">NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。</p><p class="long">NL25 代表盲注 $0.10/$0.25、標準買入 $25。數字越大級別越高，對手平均越強。各級別的盲注：NL2 = $0.01/$0.02，NL5 = $0.02/$0.05，NL10 = $0.05/$0.10，NL25 = $0.10/$0.25，NL50 = $0.25/$0.50，NL100 = $0.50/$1。</p><p class="example"><strong>範例：</strong>你有 $100，在 NL2 等於 50 個買入；在 NL25 只有 4 個買入。</p><a href="glossary.html#t-stakes">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-ev"><dt>EV（期望值）</dt><dd><p class="short">Expected Value，一個決策長期平均會賺或賠多少。</p><p class="long">撲克的目標是做 EV 最高的決策，不是這一手贏。同一個決策做一萬次的平均結果就是 EV。GTO Wizard 的 Trainer 和 Analyzer 都是用 EV 來評分。</p><p class="example"><strong>範例：</strong>一個跟注 60% 贏 10bb、40% 輸 5bb，EV = 0.6×10 − 0.4×5 = +4bb。</p><a href="glossary.html#t-ev">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-downswing"><dt>下風期</dt><dd><p class="short">連續一段時間輸錢，即使你打得沒有變差。</p><p class="long">下風期是變異數的正常表現，不是錯誤的證據。應對方式是看 EV、照流程、不升級、不追輸。</p><p class="example"><strong>範例：</strong>連續兩週輸了 12 個買入，但 EV bb/100 是正的，這是下風期。</p><a href="glossary.html#t-downswing">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-six-max"><dt>6-max</dt><dd><p class="short">最多六個人一桌的桌型。</p><p class="long">線上現金桌最常見的桌型。人少代表每個人更常拿到好位置、要玩的牌更多，策略比九人桌更積極。</p><p class="example"><strong>範例：</strong>6-max 的六個位置依序是 UTG、HJ、CO、BTN、SB、BB。</p><a href="glossary.html#t-six-max">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-hands-count"><dt>手數</dt><dd><p class="short">你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。</p><p class="long">一般桌每桌每小時約 70 到 80 手，快速桌每桌每小時 200 手以上。勝率要有統計意義，需要 5 萬到 10 萬手。</p><p class="example"><strong>範例：</strong>2 桌一般桌打 1.5 小時，大約 220 手。</p><a href="glossary.html#t-hands-count">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-ci"><dt>信賴區間</dt><dd><p class="short">根據目前的手數，你的真實勝率「大概」落在哪個範圍。</p><p class="long">手數越多區間越窄。1 萬手的區間是 ± 20 bb/100（幾乎沒有資訊），10 萬手是 ± 6.3。</p><p class="example"><strong>範例：</strong>打 1 萬手顯示 +8 bb/100，真實勝率可能在 −12 到 +28 之間，所以什麼都還不能說。</p><a href="glossary.html#t-ci">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-range"><dt>範圍</dt><dd><p class="short">一個玩家在某個情境下可能持有的所有起手牌的集合。撲克不是猜一手牌，是對一整組牌做決策。</p><p class="long">因為你看不到對手的牌，所以你只能問「他做了這個動作，可能是哪些牌？」這組牌就是範圍。範圍通常用 13×13 的格子表示（對子在對角線、同花在右上、不同花在左下），或用百分比表示（佔所有起手牌組合的比例）。</p><p class="example"><strong>範例：</strong>「BTN 開池 45%」表示按鈕位會加注最強的 45% 起手牌，大約從 AA 到 K5s、Q8s、J8s、T8s、A2o、K9o 這一帶。</p><a href="glossary.html#t-range">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-ev-bb100"><dt>EV bb/100</dt><dd><p class="short">把全壓時的運氣修正掉之後的勝率。短期看自己打得好不好要看這個，不看實際結果。</p><p class="long">全壓時用當下的權益計算「應該贏多少」而不是「實際贏多少」，可以過濾掉一部分運氣。追蹤軟體和 PokerCraft 都會顯示。</p><p class="example"><strong>範例：</strong>你 80% 領先全壓 100bb 卻輸了，實際是 −100bb，EV 是 +60bb。</p><a href="glossary.html#t-ev-bb100">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-allin"><dt>全壓（all-in）</dt><dd><p class="short">把所有籌碼一次推進底池。</p><p class="long">全壓之後你不用再做任何決定，剩下的牌會直接發完比大小。100bb 的 5-bet 幾乎都是全壓。</p><p class="example"><strong>範例：</strong>對手 4-bet，你持 KK 全壓。</p><a href="glossary.html#t-allin">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-equity"><dt>權益（equity）</dt><dd><p class="short">你的牌對上對手的牌（或範圍），把牌全部發完後你贏的機率。</p><p class="long">權益不是「現在誰大」，而是「最後誰贏的機率」。聽牌雖然現在沒成牌，但有權益。底池賠率的決策就是在比較權益和要付的錢。</p><p class="example"><strong>範例：</strong>AK 對 QQ 的翻前權益約 44%，意思是發完五張牌 AK 大約 44% 會贏。</p><a href="glossary.html#t-equity">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-rakeback"><dt>返水</dt><dd><p class="short">平台把你付過的抽水按比例退回給你。</p><p class="long">返水在微額幾乎等於你勝率的一半，一定要了解平台的返水制度並計入收入。Natural8 的返水計畫叫 Fish Buffet。</p><p class="example"><strong>範例：</strong>你每 100 手付 10bb 抽水，返水 30% 就等於每 100 手多賺 3bb。</p><a href="glossary.html#t-rakeback">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-fast-fold"><dt>快速桌（Rush &amp; Cash、Zoom）</dt><dd><p class="short">棄牌後立刻換桌、馬上拿到下一手牌的桌型。手數是一般桌的三倍。</p><p class="long">適合衝量和練習，但不能桌選、不能針對特定對手累積筆記。本教材建議以一般桌為主，快速桌補量。</p><p class="example"><strong>範例：</strong>一般桌每小時 75 手，Rush &amp; Cash 每小時 200 手以上。</p><a href="glossary.html#t-fast-fold">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-rake"><dt>抽水</dt><dd><p class="short">平台從每個底池抽走的手續費，通常是 5% 並有上限。</p><p class="long">抽水是你最大的固定對手。微額的抽水以 bb 計算比高級別更重，所以範圍要更緊、少打邊緣跟注。GTO Wizard 有依抽水結構分開解的範圍。</p><p class="example"><strong>範例：</strong>底池 $2，抽水 5% = $0.10，在 NL2 等於 5bb。</p><a href="glossary.html#t-rake">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-gto-wizard"><dt>GTO Wizard</dt><dd><p class="short">線上的 GTO 學習平台：有算好的解可以查（Study）、可以練習（Trainer）、可以上傳手牌看錯誤（Analyzer）。</p><p class="long">本教材用它當主要研究與訓練工具。Cash 方案分 Starter、Premium、Elite 三級，功能額度不同。</p><p class="example"><strong>範例：</strong>每天打開 Trainer 練 BTN vs BB 的翻牌 50 手，看自己的分數。</p><a href="glossary.html#t-gto-wizard">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-tracker"><dt>追蹤軟體</dt><dd><p class="short">PokerTracker 4、Holdem Manager 3、Hand2Note 這類把你所有手牌存進資料庫、算統計、提供 HUD 的軟體。</p><p class="long">在 Natural8 不能用。替代品是平台內建的 PokerCraft。</p><p class="example"><strong>範例：</strong>在允許的平台，用追蹤軟體濾出「BB 面對 BTN 開池」的所有手牌看勝率。</p><a href="glossary.html#t-tracker">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-tilt"><dt>Tilt（上頭）</dt><dd><p class="short">因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。</p><p class="long">Tilt 不是「有沒有」，是「什麼時候、什麼情境」。每個人有自己的類型與早期信號。對策是停損規則與重置程序。</p><p class="example"><strong>範例：</strong>被 bad beat 之後下一手用 K7o 3-bet 魚，這是 tilt。</p><a href="glossary.html#t-tilt">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-fish"><dt>魚</dt><dd><p class="short">打得很差的休閒玩家。他們是利潤的來源。</p><p class="long">魚的特徵：VPIP 很高、常 limp、常跟注、不太詐唬、攤牌亮弱牌。對魚的策略是多價值、少詐唬、尊重他們的加注。</p><p class="example"><strong>範例：</strong>一個 55/10 的玩家在 HJ limp，你 BTN 用 KJo iso 到 4bb。</p><a href="glossary.html#t-fish">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-bluff"><dt>詐唬</dt><dd><p class="short">用比對手差的牌下注，目的是讓他棄牌。</p><p class="long">詐唬要成功需要對手棄牌的機率超過 alpha（下注 ÷ 底池加下注）。微額對手棄牌太少，所以詐唬要少、要挑對象。</p><p class="example"><strong>範例：</strong>河牌你的同花沒中，底池 10bb，你下注 7bb，需要對手棄牌超過 41% 才划算。</p><a href="glossary.html#t-bluff">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-three-bet"><dt>3-bet</dt><dd><p class="short">翻前面對開池的再加注。大盲是第一注、開池是第二注、所以再加注是第三注。</p><p class="long">3-bet 有兩種理由：價值（你的牌很強，想把底池打大）或詐唬（想讓開池的人棄牌）。做 3-bet 的人叫 3-bettor。</p><p class="example"><strong>範例：</strong>CO 開 2.5bb，你在 BTN 持 QQ 加注到 8bb，這是 3-bet。</p><a href="glossary.html#t-three-bet">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-stop-loss"><dt>停損</dt><dd><p class="short">事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。</p><p class="long">本教材的規則：輸 3 個買入或出現 2 個 tilt 信號就休息 15 分鐘；輸 5 個買入結束當天。不設停贏。</p><p class="example"><strong>範例：</strong>在 NL2 輸到 $10 就關掉牌桌，去做復盤。</p><a href="glossary.html#t-stop-loss">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-session"><dt>Session</dt><dd><p class="short">一次連續打牌的時段。</p><p class="long">本教材建議一個 session 90 到 120 分鐘，中間休息 15 分鐘，每天最多三個。每個 session 結束要寫日誌。</p><p class="example"><strong>範例：</strong>晚上 8 點到 9 點半打了一個 session，期間標記了 3 手不確定的牌。</p><a href="glossary.html#t-session">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-a-game"><dt>A-game / B-game / C-game</dt><dd><p class="short">你最好、普通、最差狀態時的打法。</p><p class="long">職業的重點不是每天都 A-game，而是把 C-game 推高。先把三種狀態各寫出 5 條具體行為。</p><p class="example"><strong>範例：</strong>A-game：每個河牌都數組合；C-game：河牌憑感覺跟注。</p><a href="glossary.html#t-a-game">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-process-goal"><dt>流程目標</dt><dd><p class="short">你能控制的目標（做對的事），而不是結果目標（贏多少錢）。</p><p class="long">結果受變異數影響，流程不會。每天只設流程目標，例如「每個 c-bet 前說出牌面類型」。</p><p class="example"><strong>範例：</strong>今天的目標是「河牌每個決策都數對手的價值與詐唬組合」，而不是「贏 $5」。</p><a href="glossary.html#t-process-goal">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-river"><dt>河牌</dt><dd><p class="short">第五張、也是最後一張公共牌，以及最後一個下注回合。</p><p class="long">河牌之後沒有牌會再來，所以不再有「聽牌」的概念：你要嘛是最好的牌，要嘛不是。河牌的決策只有三種：價值下注、詐唬、或是為了攤牌而 check/跟注。</p><p class="example"><strong>範例：</strong>河牌 3♣ 之後，桌面 K♠7♦2♣J♥3♣ 定案，兩邊比大小。</p><a href="glossary.html#t-river">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-value-bet"><dt>價值下注</dt><dd><p class="short">你認為自己領先，下注的目的是讓更差的牌跟注付錢。</p><p class="long">價值下注的檢驗標準：更差的牌會跟注的機率超過一半嗎？會就下注。對愛跟注的對手可以用更弱的牌價值下注（薄價值）。</p><p class="example"><strong>範例：</strong>河牌你持 TPTK，對手是跟注站，你下注 75% 底池，他用中對跟注。</p><a href="glossary.html#t-value-bet">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-cbet"><dt>C-bet（持續下注）</dt><dd><p class="short">Continuation bet，翻前加注的人在翻牌繼續下注。</p><p class="long">C-bet 是翻後最常見的動作。它有效是因為翻前加注者的範圍通常比較強，而對手大多數時候沒中牌。但不是每個牌面都該 c-bet，教材用牌面分類來決定頻率和尺寸。</p><p class="example"><strong>範例：</strong>你在 BTN 開池，BB 跟注，翻牌 K72r，BB check，你下注 33% 底池，這是 c-bet。</p><a href="glossary.html#t-cbet">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-board"><dt>牌面</dt><dd><p class="short">桌上的公共牌。牌面的樣子（高低、連不連、同不同花）決定了誰的範圍比較好。</p><p class="long">教材把牌面分成幾類：A 高乾燥、K/Q 高乾燥、低配對、中張連接、高張連接、單色等。每一類有不同的 c-bet 策略。</p><p class="example"><strong>範例：</strong>K72r 是「K 高乾燥牌面」，T98ss 是「中張連接牌面」。</p><a href="glossary.html#t-board">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-variance"><dt>變異數</dt><dd><p class="short">結果圍繞平均值上下晃動的幅度。撲克的變異數非常大。</p><p class="long">就算你是贏家，一萬手內輸掉 5 個買入很正常。看懂變異數才不會在下風期懷疑自己或在上風期自滿。</p><p class="example"><strong>範例：</strong>一個 5 bb/100 的贏家，一年內幾乎必然遇到一次 15 到 20 個買入的下風期。</p><a href="glossary.html#t-variance">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-warmup"><dt>熱身</dt><dd><p class="short">打牌前 10 到 20 分鐘的準備：重看昨天的手牌、做幾手 Trainer、確認心態。</p><p class="long">熱身把腦袋從「日常模式」切到「決策模式」，能減少前 30 分鐘的粗心錯誤。</p><p class="example"><strong>範例：</strong>打開 Trainer 練 15 手 BTN vs BB，再打開牌桌。</p><a href="glossary.html#t-warmup">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-pot"><dt>底池</dt><dd><p class="short">這一手牌裡所有人已經投進去的錢的總和。</p><p class="long">底池是你在爭的東西。下注尺寸常用「占底池的百分比」表示，例如「下注 50% 底池」就是下注金額等於底池的一半。</p><p class="example"><strong>範例：</strong>底池 10bb，你下注 5bb，就是下注 50% 底池；對手跟注後底池變成 20bb。</p><a href="glossary.html#t-pot">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-trainer"><dt>Trainer（Practice）</dt><dd><p class="short">GTO Wizard 的練習模式：給你一手牌和情境，你做決定，它依 EV loss 評分。</p><p class="long">每天 20 分鐘的 Trainer 是本教材的核心訓練。目標分數依階段 85 到 90 分。可以依手牌類別練習。</p><p class="example"><strong>範例：</strong>Trainer 給你 BTN 持 A♠5♠ 在 K72r，你選下注 33%，它顯示這是最佳動作、EV loss 0。</p><a href="glossary.html#t-trainer">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-ev-loss"><dt>EV loss</dt><dd><p class="short">你的決策比最佳決策少賺了多少。GTO Wizard 用它來評分。</p><p class="long">EV loss 越大錯越嚴重。一個大錯比十個小錯嚴重，所以復盤先看 EV loss 最大的手牌。</p><p class="example"><strong>範例：</strong>解說這裡該下注（EV 5bb），你 check（EV 3bb），EV loss 是 2bb。</p><a href="glossary.html#t-ev-loss">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-position"><dt>位置</dt><dd><p class="short">你在這一手牌的行動順序。越晚行動越有利，因為你看到別人的動作後才決定。</p><p class="long">每手牌按鈕順時針移一格，所以每個人輪流坐到好位置和壞位置。翻後的行動順序固定從小盲開始、按鈕最後。位置是撲克最重要的結構性優勢。</p><p class="example"><strong>範例：</strong>你在 BTN，對手在 BB。翻牌後他要先動作，你看了他 check 之後再決定要不要下注。</p><a href="glossary.html#t-position">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-srp"><dt>SRP（單次加注底池）</dt><dd><p class="short">Single Raised Pot，翻前只有一次加注、被跟注的底池。最常見的底池類型。</p><p class="long">SRP 的翻牌底池約 5 到 6bb，剩餘籌碼約 95bb，SPR 很高（約 17），所以一對通常不該輸掉全部籌碼。</p><p class="example"><strong>範例：</strong>BTN 開 2.5bb、BB 跟注，翻牌的底池就是 SRP。</p><a href="glossary.html#t-srp">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-threebp"><dt>3BP（3-bet 底池）</dt><dd><p class="short">翻前有人 3-bet 且被跟注的底池。</p><p class="long">3BP 的翻牌底池約 20bb，SPR 約 4，兩邊範圍都很窄很強。一對（超對、TPTK）的價值大增，常常可以承諾全壓。</p><p class="example"><strong>範例：</strong>SB 3-bet 到 10bb，BTN 跟注，翻牌底池 20.5bb。</p><a href="glossary.html#t-threebp">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-fourbp"><dt>4BP（4-bet 底池）</dt><dd><p class="short">翻前有人 4-bet 且被跟注的底池。</p><p class="long">4BP 的 SPR 只有 1.5 到 2，翻前就幾乎決定了一切。翻牌有任何一對通常就全壓。</p><p class="example"><strong>範例：</strong>BTN 4-bet 到 22bb，SB 跟注，翻牌底池約 45bb，剩 78bb。</p><a href="glossary.html#t-fourbp">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-red-line"><dt>紅線（非攤牌收益）</dt><dd><p class="short">沒走到攤牌的底池的總輸贏，也就是靠對手棄牌贏的、和自己棄牌輸的。</p><p class="long">微額的紅線小負是正常的（因為你用價值打、少詐唬）。紅線陡降代表過度棄牌、不 stab、不 probe。</p><p class="example"><strong>範例：</strong>紅線 −15 bb/100 而藍線 +20 bb/100，總勝率 +5，這在微額很常見。</p><a href="glossary.html#t-red-line">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-blue-line"><dt>藍線（攤牌收益）</dt><dd><p class="short">走到攤牌的底池的總輸贏。</p><p class="long">藍線應該明顯是正的。藍線不好代表價值太薄或抓詐唬太多。</p><p class="example"><strong>範例：</strong>藍線一直往上代表你的價值下注和抓詐唬判斷正確。</p><a href="glossary.html#t-blue-line">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-analyzer"><dt>Analyzer（手牌分析）</dt><dd><p class="short">把你實際打過的手牌上傳，GTO Wizard 告訴你每個決策的 EV loss。</p><p class="long">Starter 方案每月約 100 手額度，所以只上傳大底池和不確定的手。它用 GTO 當基準，你刻意的剝削會被標成錯誤，要自己註記。</p><p class="example"><strong>範例：</strong>上傳本週 25 手，發現最大的錯誤都在轉牌放棄太多，下週就練轉牌。</p><a href="glossary.html#t-analyzer">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-review"><dt>復盤</dt><dd><p class="short">打完之後回頭檢視手牌：當時怎麼想、GTO 怎麼說、差在哪、以後怎麼做。</p><p class="long">復盤是進步的來源，比打牌本身更重要。用手牌復盤模板，每週至少 10 手。</p><p class="example"><strong>範例：</strong>復盤發現自己在 3-bet 底池面對小 c-bet 棄太多，下週改成多跟注。</p><a href="glossary.html#t-review">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-reports"><dt>Reports（彙總報告）</dt><dd><p class="short">GTO Wizard 把所有翻牌的策略彙總成表，可以依牌面特徵排序。</p><p class="long">用 Reports 可以一次看到「哪類牌面 c-bet 多、哪類少」，比一個一個翻牌看快得多。Starter 可能不開放，不開放就用教材的牌面表。</p><p class="example"><strong>範例：</strong>Reports 顯示 BTN vs BB 在 A 高牌面平均 c-bet 85%，在中張連接牌面只有 45%。</p><a href="glossary.html#t-reports">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-study-mode"><dt>Study（解庫）</dt><dd><p class="short">GTO Wizard 裡瀏覽算好的解的地方。</p><p class="long">選位置、動作、牌面之後，可以看到每一手牌的動作頻率、EV、權益。用「三個問題法」讀它：誰有優勢、為什麼這個尺寸、哪些手牌類別做什麼。</p><p class="example"><strong>範例：</strong>在 Study 打開 BTN vs BB 的 K72r，看到頂對全部下注、中對大多 check。</p><a href="glossary.html#t-study-mode">在名詞表查看 →</a></dd></div></dl></details><details class="toc" open><summary>🧭 本頁目錄</summary><ol><li><a href="#s-1-資金管理">§1 資金管理</a></li><li class="lvl3"><a href="#s-公式">公式</a></li><li class="lvl3"><a href="#s-規則">規則</a></li><li><a href="#s-2-變異數-職業選手的必修課">§2 變異數（職業選手的必修課）</a></li><li><a href="#s-3-職業經濟模型">§3 職業經濟模型</a></li><li class="lvl3"><a href="#s-月收入公式">月收入公式</a></li><li><a href="#s-4-心理">§4 心理</a></li><li class="lvl3"><a href="#s-Tilt-的七種類型-出自-Tendler-The-Mental-Game-of-Poker">Tilt 的七種類型（出自 Tendler《The Mental Game of Poker》）</a></li><li class="lvl3"><a href="#s-停損與-session-規則">停損與 session 規則</a></li><li class="lvl3"><a href="#s-A-B-C-game-清單">A / B / C game 清單</a></li><li class="lvl3"><a href="#s-重置程序-1-分鐘">重置程序（1 分鐘）</a></li><li class="lvl3"><a href="#s-結果-vs-流程">結果 vs 流程</a></li><li class="lvl3"><a href="#s-身體">身體</a></li><li><a href="#s-5-流程">§5 流程</a></li><li class="lvl3"><a href="#s-Session-結構">Session 結構</a></li><li class="lvl3"><a href="#s-手牌標記">手牌標記</a></li><li class="lvl3"><a href="#s-每週檢視-週六">每週檢視（週六）</a></li><li class="lvl3"><a href="#s-每月檢視">每月檢視</a></li><li class="lvl3"><a href="#s-學習夥伴與教練">學習夥伴與教練</a></li><li><a href="#s-6-升級路線">§6 升級路線</a></li><li><a href="#s-7-職業選手每週作息範例-全職">§7 職業選手每週作息範例（全職）</a></li></ol></details>
+<div class="callout intro"><div class="callout-title"><span class="ci">💡</span>白話導讀</div><div class="callout-body">這一章是「撲克技術以外」的事：錢怎麼管、輸贏的波動有多大、要賺多少才能當職業、情緒怎麼控制、每天每週的流程怎麼跑。這些比牌技更決定你能不能走到職業。你的<a class="term" href="glossary.html#t-bankroll" data-tip="決定用多少錢打哪個級別、什麼時候升級降級的規則。">資金</a>只有 $100，所以 §1 的規則要配合「個人化課表（<a class="term" href="glossary.html#t-natural8" data-tip="亞洲常用的線上撲克平台，屬於 GGPoker 網路。禁止 HUD，有 PokerCraft、Rush &amp; Cash、Fish Buffet。">N8</a>）」§2 的微額階梯一起看。</div></div>
+<hr>
+<h2 id="s-1-資金管理">§1 資金管理</h2>
+<h3 id="s-公式">公式</h3>
+<p>所需<a class="term" href="glossary.html#t-buyin" data-tip="入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。">買入</a>數（<a class="term" href="glossary.html#t-buyin" data-tip="入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。">BI</a>）= (<a class="term" href="glossary.html#t-sd" data-tip="變異數的量化方式。6-max 現金桌大約是每 100 手 100bb。">SD</a>² ÷ (2 × <a class="term" href="glossary.html#t-winrate" data-tip="平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。">勝率</a>)) × ln(1 ÷ <a class="term" href="glossary.html#t-ror" data-tip="Risk of Ruin，以目前的資金和勝率，最後把錢輸光的機率。">破產風險</a>) ÷ 100，<a class="term" href="glossary.html#t-sd" data-tip="變異數的量化方式。6-max 現金桌大約是每 100 手 100bb。">SD</a> 以 100bb/100 計。</p>
+<div class="table-wrap"><table><thead><tr><th>真實<a class="term" href="glossary.html#t-winrate" data-tip="平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。">勝率</a>（<a class="term" href="glossary.html#t-bb100" data-tip="每 100 手的平均獲利，以大盲計。勝率的單位。">bb/100</a>）</th><th><a class="term" href="glossary.html#t-ror" data-tip="Risk of Ruin，以目前的資金和勝率，最後把錢輸光的機率。">破產風險</a> 5%</th><th>破產風險 1%</th></tr></thead><tbody><tr><td data-label="真實勝率（bb/100）">2</td><td data-label="破產風險 5%">75 BI</td><td data-label="破產風險 1%">115 BI</td></tr><tr><td data-label="真實勝率（bb/100）">3</td><td data-label="破產風險 5%">50 BI</td><td data-label="破產風險 1%">77 BI</td></tr><tr><td data-label="真實勝率（bb/100）">4</td><td data-label="破產風險 5%">38 BI</td><td data-label="破產風險 1%">58 BI</td></tr><tr><td data-label="真實勝率（bb/100）">5</td><td data-label="破產風險 5%">30 BI</td><td data-label="破產風險 1%">46 BI</td></tr><tr><td data-label="真實勝率（bb/100）">8</td><td data-label="破產風險 5%">19 BI</td><td data-label="破產風險 1%">29 BI</td></tr><tr><td data-label="真實勝率（bb/100）">10</td><td data-label="破產風險 5%">15 BI</td><td data-label="破產風險 1%">23 BI</td></tr></tbody></table></div>
+<p>你不知道自己的真實勝率，所以用保守值。</p>
+<div class="callout why"><div class="callout-title"><span class="ci">🔎</span>怎麼讀這張表</div><div class="callout-body">「真實勝率」是你長期平均每 100 手贏幾個大盲；「破產風險 5%」= 有 5% 的機率會把整筆<a class="term" href="glossary.html#t-bankroll" data-tip="決定用多少錢打哪個級別、什麼時候升級降級的規則。">資金</a>輸光。例如你真實勝率是 5 <a class="term" href="glossary.html#t-bb100" data-tip="每 100 手的平均獲利，以大盲計。勝率的單位。">bb/100</a>，想把輸光的機率壓到 5% 以下，需要 30 個買入。因為你不知道自己真實的勝率，就用保守的數字來算，例如當自己只有 3 bb/100，那就需要 50 個買入。</div></div>
+<h3 id="s-規則">規則</h3>
+<div class="table-wrap"><table><thead><tr><th>規則</th><th>內容</th></tr></thead><tbody><tr><td data-label="規則">起始</td><td data-label="內容"><a class="term" href="glossary.html#t-stakes" data-tip="NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。">NL25</a> 至少 40 BI（$1,000），與生活費分開</td></tr><tr><td data-label="規則">升級</td><td data-label="內容">新<a class="term" href="glossary.html#t-stakes" data-tip="NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。">級別</a> ≥ 40 BI <strong>且</strong> 當前級別最近 100k 手 <a class="term" href="glossary.html#t-ev" data-tip="Expected Value，一個決策長期平均會賺或賠多少。">EV</a> ≥ 4 bb/100 <strong>且</strong> 階段測驗通過</td></tr><tr><td data-label="規則">試打</td><td data-label="內容">每次試打 5 BI；輸完就回降，直到在原級別賺回再試</td></tr><tr><td data-label="規則">降級</td><td data-label="內容">資金 &lt; 30 BI（當前級別）→ 降一級</td></tr><tr><td data-label="規則">職業</td><td data-label="內容">100 BI ＋ 6 個月生活費（兩者分開存）</td></tr><tr><td data-label="規則">提領</td><td data-label="內容">每月只提領「超過目標資金」的部分；<a class="term" href="glossary.html#t-downswing" data-tip="連續一段時間輸錢，即使你打得沒有變差。">下風期</a>不提領</td></tr></tbody></table></div>
+<p>資金不足 40 BI NL25 時，用微額階梯（NL2 → NL5 → NL10 → NL25）往上爬，門檻見 <a href="10.html">10_個人化課表_N8.md</a> §2。</p>
+<hr>
+<h2 id="s-2-變異數-職業選手的必修課">§2 變異數（職業選手的必修課）</h2>
+<ul><li><a class="term" href="glossary.html#t-six-max" data-tip="最多六個人一桌的桌型。">6-max</a> 的標準差約 <strong>100 bb/100</strong>（90–110）。</li><li>觀察到的勝率的標準誤 = SD ÷ √(<a class="term" href="glossary.html#t-hands-count" data-tip="你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。">手數</a> ÷ 100)。</li></ul>
+<div class="table-wrap"><table><thead><tr><th><a class="term" href="glossary.html#t-hands-count" data-tip="你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。">手數</a></th><th>標準誤</th><th>95% <a class="term" href="glossary.html#t-ci" data-tip="根據目前的手數，你的真實勝率「大概」落在哪個範圍。">信賴區間</a></th></tr></thead><tbody><tr><td data-label="手數">10k</td><td data-label="標準誤">10 bb/100</td><td data-label="95% 信賴區間">± 20</td></tr><tr><td data-label="手數">50k</td><td data-label="標準誤">4.5 bb/100</td><td data-label="95% 信賴區間">± 9</td></tr><tr><td data-label="手數">100k</td><td data-label="標準誤">3.2 bb/100</td><td data-label="95% 信賴區間">± 6.3</td></tr><tr><td data-label="手數">500k</td><td data-label="標準誤">1.4 bb/100</td><td data-label="95% 信賴區間">± 2.8</td></tr></tbody></table></div>
+<div class="callout why"><div class="callout-title"><span class="ci">🔎</span>怎麼讀這張表</div><div class="callout-body">「標準誤」是你看到的勝率跟真實勝率之間的典型誤差。打 1 萬手（10k）誤差大約 ± 10，所以看到 +8 bb/100，真實可能是 −2 也可能是 +18。「95% <a class="term" href="glossary.html#t-ci" data-tip="根據目前的手數，你的真實勝率「大概」落在哪個範圍。">信賴區間</a>」= 有 95% 的把握真實勝率落在這個<a class="term" href="glossary.html#t-range" data-tip="一個玩家在某個情境下可能持有的所有起手牌的集合。撲克不是猜一手牌，是對一整組牌做決策。">範圍</a>內。手數越多，<a class="term" href="glossary.html#t-range" data-tip="一個玩家在某個情境下可能持有的所有起手牌的集合。撲克不是猜一手牌，是對一整組牌做決策。">範圍</a>越窄。</div></div>
+<p>結論：</p>
+<ul><li>10k 手輸 5 BI <strong>完全正常</strong>，什麼都不能說明。</li><li>100k 手才開始有統計意義，而且區間仍有 ± 6 bb/100。</li><li>一個 5 bb/100 的贏家，一年內幾乎必然遇到 15–20 BI 的<a class="term" href="glossary.html#t-downswing" data-tip="連續一段時間輸錢，即使你打得沒有變差。">下風期</a>；30 BI 也不罕見。</li><li>每天看的指標：<strong><a class="term" href="glossary.html#t-ev-bb100" data-tip="把全壓時的運氣修正掉之後的勝率。短期看自己打得好不好要看這個，不看實際結果。">EV bb/100</a></strong>（<a class="term" href="glossary.html#t-allin" data-tip="把所有籌碼一次推進底池。">全壓</a><a class="term" href="glossary.html#t-equity" data-tip="你的牌對上對手的牌（或範圍），把牌全部發完後你贏的機率。">權益</a>調整後）與流程指標，不看實際金額。</li></ul>
+<hr>
+<h2 id="s-3-職業經濟模型">§3 職業經濟模型</h2>
+<h3 id="s-月收入公式">月收入公式</h3>
+<p>月收入 ≈ 每月手數 ÷ 100 × (<a class="term" href="glossary.html#t-ev" data-tip="Expected Value，一個決策長期平均會賺或賠多少。">EV</a> 勝率 ＋ <a class="term" href="glossary.html#t-rakeback" data-tip="平台把你付過的抽水按比例退回給你。">返水</a>換算) × 大盲</p>
+<div class="table-wrap"><table><thead><tr><th>項目</th><th>參考值</th></tr></thead><tbody><tr><td data-label="項目">一般桌每桌手數</td><td data-label="參考值">70–80 手/小時</td></tr><tr><td data-label="項目"><a class="term" href="glossary.html#t-fast-fold" data-tip="棄牌後立刻換桌、馬上拿到下一手牌的桌型。手數是一般桌的三倍。">快速桌</a>每桌手數</td><td data-label="參考值">200+ 手/小時</td></tr><tr><td data-label="項目">4 桌一般桌</td><td data-label="參考值">≈ 300 手/小時</td></tr><tr><td data-label="項目">6 桌一般桌</td><td data-label="參考值">≈ 450 手/小時</td></tr><tr><td data-label="項目">全職每月桌上時數</td><td data-label="參考值">100–120 小時</td></tr><tr><td data-label="項目">全職每月手數</td><td data-label="參考值">60k–120k</td></tr><tr><td data-label="項目">微額<a class="term" href="glossary.html#t-rakeback" data-tip="平台把你付過的抽水按比例退回給你。">返水</a>換算</td><td data-label="參考值">30% 返水 ≈ +2.5–3.5 bb/100（NL25 <a class="term" href="glossary.html#t-rake" data-tip="平台從每個底池抽走的手續費，通常是 5% 並有上限。">抽水</a>約 8–12 bb/100）</td></tr><tr><td data-label="項目">工具成本</td><td data-label="參考值"><a class="term" href="glossary.html#t-gto-wizard" data-tip="線上的 GTO 學習平台：有算好的解可以查（Study）、可以練習（Trainer）、可以上傳手牌看錯誤（Analyzer）。">GTO Wizard</a> ＋ <a class="term" href="glossary.html#t-tracker" data-tip="PokerTracker 4、Holdem Manager 3、Hand2Note 這類把你所有手牌存進資料庫、算統計、提供 HUD 的軟體。">追蹤軟體</a> ≈ $50–150/月</td></tr></tbody></table></div>
+<p>範例：NL100、每月 80k 手、EV 4 bb/100 ＋ 返水 2 bb/100 → 800 × 6 × $1 = $4,800/月（扣工具與稅前）。</p>
+<p>預算用 EV 的 70% 做規劃；下風期也要能活。</p>
+<hr>
+<h2 id="s-4-心理">§4 心理</h2>
+<h3 id="s-Tilt-的七種類型-出自-Tendler-The-Mental-Game-of-Poker">Tilt 的七種類型（出自 Tendler《The Mental Game of Poker》）</h3>
+<div class="table-wrap"><table><thead><tr><th>類型</th><th>描述</th><th>早期信號</th></tr></thead><tbody><tr><td data-label="類型">下風 <a class="term" href="glossary.html#t-tilt" data-tip="因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。">tilt</a></td><td data-label="描述">一直輸就崩</td><td data-label="早期信號">「怎麼又這樣」</td></tr><tr><td data-label="類型">不公 <a class="term" href="glossary.html#t-tilt" data-tip="因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。">tilt</a></td><td data-label="描述">覺得運氣針對你</td><td data-label="早期信號">開始講 bad beat</td></tr><tr><td data-label="類型">厭輸 tilt</td><td data-label="描述">不能接受輸</td><td data-label="早期信號">追輸、加桌</td></tr><tr><td data-label="類型">犯錯 tilt</td><td data-label="描述">犯錯後自責到影響下一手</td><td data-label="早期信號">開始回想上一手</td></tr><tr><td data-label="類型">自以為 tilt</td><td data-label="描述">「我應該贏這些人」</td><td data-label="早期信號">對<a class="term" href="glossary.html#t-fish" data-tip="打得很差的休閒玩家。他們是利潤的來源。">魚</a>不耐煩、<a class="term" href="glossary.html#t-bluff" data-tip="用比對手差的牌下注，目的是讓他棄牌。">詐唬</a><a class="term" href="glossary.html#t-fish" data-tip="打得很差的休閒玩家。他們是利潤的來源。">魚</a></td></tr><tr><td data-label="類型">復仇 tilt</td><td data-label="描述">想打回某個人</td><td data-label="早期信號">針對特定玩家 <a class="term" href="glossary.html#t-three-bet" data-tip="翻前面對開池的再加注。大盲是第一注、開池是第二注、所以再加注是第三注。">3-bet</a></td></tr><tr><td data-label="類型">絕望 tilt</td><td data-label="描述">想一次翻本</td><td data-label="早期信號">升級、打更久</td></tr></tbody></table></div>
+<p><strong>第 24 週作業</strong>：寫出你的主要 tilt 類型（通常 1–2 種）、觸發情境、早期信號（身體：下巴緊、點太快；行為：跟太寬、對魚<a class="term" href="glossary.html#t-bluff" data-tip="用比對手差的牌下注，目的是讓他棄牌。">詐唬</a>、開桌）。</p>
+<h3 id="s-停損與-session-規則">停損與 session 規則</h3>
+<div class="table-wrap"><table><thead><tr><th>規則</th><th>內容</th></tr></thead><tbody><tr><td data-label="規則"><a class="term" href="glossary.html#t-stop-loss" data-tip="事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。">停損</a> 1</td><td data-label="內容">輸 3 BI 或出現 2 個 tilt 早期信號 → 休息 15 分鐘</td></tr><tr><td data-label="規則"><a class="term" href="glossary.html#t-stop-loss" data-tip="事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。">停損</a> 2</td><td data-label="內容">輸 5 BI → 結束當天</td></tr><tr><td data-label="規則">停贏</td><td data-label="內容">不設（桌好就繼續）</td></tr><tr><td data-label="規則"><a class="term" href="glossary.html#t-session" data-tip="一次連續打牌的時段。">Session</a> 長度</td><td data-label="內容">90–120 分鐘，休息 15 分鐘；每天最多 3 個 <a class="term" href="glossary.html#t-session" data-tip="一次連續打牌的時段。">session</a></td></tr><tr><td data-label="規則">禁止</td><td data-label="內容">情緒事件後打牌、喝酒打牌、睡眠 &lt; 6 小時打牌</td></tr></tbody></table></div>
+<h3 id="s-A-B-C-game-清單">A / B / C game 清單</h3>
+<p>寫出三欄各 5 條：<a class="term" href="glossary.html#t-a-game" data-tip="你最好、普通、最差狀態時的打法。">A-game</a> 時你會做什麼、<a class="term" href="glossary.html#t-a-game" data-tip="你最好、普通、最差狀態時的打法。">B-game</a>、C-game。目標是<strong>把 C-game 推高</strong>（Tendler 的 inchworm 概念），不是追求每天 A-game。每個 session 結束時給自己評一個 A/B/C 比例。</p>
+<h3 id="s-重置程序-1-分鐘">重置程序（1 分鐘）</h3>
+<p>站起來、喝水、4-4-8 呼吸三次（吸 4 秒、停 4 秒、吐 8 秒）、說出「下一手是獨立事件」。</p>
+<h3 id="s-結果-vs-流程">結果 vs 流程</h3>
+<p>每日目標只設<strong><a class="term" href="glossary.html#t-process-goal" data-tip="你能控制的目標（做對的事），而不是結果目標（贏多少錢）。">流程目標</a></strong>，例如：「每個<a class="term" href="glossary.html#t-river" data-tip="第五張、也是最後一張公共牌，以及最後一個下注回合。">河牌</a>決策都數對手的<a class="term" href="glossary.html#t-value-bet" data-tip="你認為自己領先，下注的目的是讓更差的牌跟注付錢。">價值</a>／詐唬組合」「每個 <a class="term" href="glossary.html#t-cbet" data-tip="Continuation bet，翻前加注的人在翻牌繼續下注。">c-bet</a> 前說出<a class="term" href="glossary.html#t-board" data-tip="桌上的公共牌。牌面的樣子（高低、連不連、同不同花）決定了誰的範圍比較好。">牌面</a>類型」。結果交給<a class="term" href="glossary.html#t-variance" data-tip="結果圍繞平均值上下晃動的幅度。撲克的變異數非常大。">變異數</a>。</p>
+<h3 id="s-身體">身體</h3>
+<p>睡眠 7–8 小時、每週運動 3 次、固定作息。這不是建議，是職業的基本條件。</p>
+<hr>
+<h2 id="s-5-流程">§5 流程</h2>
+<h3 id="s-Session-結構">Session 結構</h3>
+<p><a class="term" href="glossary.html#t-warmup" data-tip="打牌前 10 到 20 分鐘的準備：重看昨天的手牌、做幾手 Trainer、確認心態。">熱身</a>（10–20 分）→ 打牌（90–120 分）→ 收尾（10–15 分）。細節見 <a href="01.html">01_26週課表.md</a>。</p>
+<h3 id="s-手牌標記">手牌標記</h3>
+<p>每個 session 標 3–5 手：不確定的、大<a class="term" href="glossary.html#t-pot" data-tip="這一手牌裡所有人已經投進去的錢的總和。">底池</a>的、感覺怪的。<strong>不是輸最多的。</strong></p>
+<h3 id="s-每週檢視-週六">每週檢視（週六）</h3>
+<p>手數、<a class="term" href="glossary.html#t-ev-bb100" data-tip="把全壓時的運氣修正掉之後的勝率。短期看自己打得好不好要看這個，不看實際結果。">EV bb/100</a>、實際 bb/100、<a class="term" href="glossary.html#t-trainer" data-tip="GTO Wizard 的練習模式：給你一手牌和情境，你做決定，它依 EV loss 評分。">Trainer</a> 平均分、主題完成度、tilt 事件、前 3 大 <a class="term" href="glossary.html#t-ev-loss" data-tip="你的決策比最佳決策少賺了多少。GTO Wizard 用它來評分。">EV loss</a> 類型、下週主題。</p>
+<h3 id="s-每月檢視">每月檢視</h3>
+<p>依<a class="term" href="glossary.html#t-position" data-tip="你在這一手牌的行動順序。越晚行動越有利，因為你看到別人的動作後才決定。">位置</a>勝率、依<a class="term" href="glossary.html#t-pot" data-tip="這一手牌裡所有人已經投進去的錢的總和。">底池</a>類型（<a class="term" href="glossary.html#t-srp" data-tip="Single Raised Pot，翻前只有一次加注、被跟注的底池。最常見的底池類型。">SRP</a> / <a class="term" href="glossary.html#t-threebp" data-tip="翻前有人 3-bet 且被跟注的底池。">3BP</a> / <a class="term" href="glossary.html#t-fourbp" data-tip="翻前有人 4-bet 且被跟注的底池。">4BP</a> / 多人）勝率、<a class="term" href="glossary.html#t-red-line" data-tip="沒走到攤牌的底池的總輸贏，也就是靠對手棄牌贏的、和自己棄牌輸的。">紅線</a><a class="term" href="glossary.html#t-blue-line" data-tip="走到攤牌的底池的總輸贏。">藍線</a>、前三漏洞、下月主題、資金狀態、升級檢核。</p>
+<h3 id="s-學習夥伴與教練">學習夥伴與教練</h3>
+<ul><li>每週一次 1 小時手牌討論，找比你高一級的玩家。</li><li>教練：階段 4 之後考慮；要求他看你的資料庫與 <a class="term" href="glossary.html#t-analyzer" data-tip="把你實際打過的手牌上傳，GTO Wizard 告訴你每個決策的 EV loss。">Analyzer</a> 結果。一次完整的資料庫 review 比十堂隨機課有用。</li></ul>
+<hr>
+<h2 id="s-6-升級路線">§6 升級路線</h2>
+<div class="table-wrap"><table><thead><tr><th>從 → 到</th><th>資金門檻</th><th>表現門檻</th><th>其他</th></tr></thead><tbody><tr><td data-label="從 → 到">NL25 → NL50</td><td data-label="資金門檻">≥ 40 BI NL50（$2,000）</td><td data-label="表現門檻">NL25 最近 100k 手 EV ≥ 4 bb/100</td><td data-label="其他">階段 4 測驗通過；穩定 4 桌</td></tr><tr><td data-label="從 → 到">NL50 → NL100</td><td data-label="資金門檻">≥ 40 BI NL100（$4,000）</td><td data-label="表現門檻">NL50 100k 手 EV ≥ 3 bb/100</td><td data-label="其他">連續 2 個月正 EV</td></tr><tr><td data-label="從 → 到">NL100 → NL200</td><td data-label="資金門檻">≥ 50 BI NL200（$10,000）</td><td data-label="表現門檻">NL100 150k 手 EV ≥ 3 bb/100</td><td data-label="其他">連續 3 個月正收益；心理指標穩定</td></tr><tr><td data-label="從 → 到">全職決定</td><td data-label="資金門檻">100 BI 當前級別 ＋ 6 個月生活費</td><td data-label="表現門檻">連續 3 個月收入 ≥ 生活所需</td><td data-label="其他">每月 80k+ 手不影響決策品質</td></tr></tbody></table></div>
+<hr>
+<h2 id="s-7-職業選手每週作息範例-全職">§7 職業選手每週作息範例（全職）</h2>
+<div class="table-wrap"><table><thead><tr><th>時段</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr></thead><tbody><tr><td data-label="時段">09:00–09:20</td><td data-label="一"><a class="term" href="glossary.html#t-warmup" data-tip="打牌前 10 到 20 分鐘的準備：重看昨天的手牌、做幾手 Trainer、確認心態。">熱身</a></td><td data-label="二">熱身</td><td data-label="三">熱身</td><td data-label="四">熱身</td><td data-label="五">熱身</td><td data-label="六">深度<a class="term" href="glossary.html#t-review" data-tip="打完之後回頭檢視手牌：當時怎麼想、GTO 怎麼說、差在哪、以後怎麼做。">復盤</a> 20 手</td><td data-label="日">休</td></tr><tr><td data-label="時段">09:20–13:10</td><td data-label="一">打牌 2 session</td><td data-label="二">打牌</td><td data-label="三">打牌</td><td data-label="四">打牌</td><td data-label="五">打牌</td><td data-label="六"><a class="term" href="glossary.html#t-reports" data-tip="GTO Wizard 把所有翻牌的策略彙總成表，可以依牌面特徵排序。">Reports</a> / <a class="term" href="glossary.html#t-study-mode" data-tip="GTO Wizard 裡瀏覽算好的解的地方。">Study</a></td><td data-label="日">休</td></tr><tr><td data-label="時段">14:30–16:30</td><td data-label="一">學習＋<a class="term" href="glossary.html#t-trainer" data-tip="GTO Wizard 的練習模式：給你一手牌和情境，你做決定，它依 EV loss 評分。">Trainer</a></td><td data-label="二">學習＋Trainer</td><td data-label="三">學習＋Trainer</td><td data-label="四">學習＋Trainer</td><td data-label="五"><a class="term" href="glossary.html#t-analyzer" data-tip="把你實際打過的手牌上傳，GTO Wizard 告訴你每個決策的 EV loss。">Analyzer</a> <a class="term" href="glossary.html#t-review" data-tip="打完之後回頭檢視手牌：當時怎麼想、GTO 怎麼說、差在哪、以後怎麼做。">復盤</a></td><td data-label="六">週檢核表</td><td data-label="日">休</td></tr><tr><td data-label="時段">16:30–18:30</td><td data-label="一">打牌</td><td data-label="二">打牌</td><td data-label="三">打牌</td><td data-label="四">打牌</td><td data-label="五">打牌</td><td data-label="六">自由</td><td data-label="日">休</td></tr><tr><td data-label="時段">18:30–18:50</td><td data-label="一">收尾</td><td data-label="二">收尾</td><td data-label="三">收尾</td><td data-label="四">收尾</td><td data-label="五">收尾</td><td data-label="六"></td><td data-label="日"></td></tr><tr><td data-label="時段">晚上</td><td data-label="一">運動</td><td data-label="二">手牌討論（夥伴）</td><td data-label="三">運動</td><td data-label="四">自由</td><td data-label="五">運動</td><td data-label="六">自由</td><td data-label="日">休</td></tr></tbody></table></div>
+<details class="toc all-chapters"><summary>📚 所有章節</summary><ol><li><a href="basics.html">1. 🎓 新手基礎（先讀這章）</a></li><li><a href="glossary.html">2. 📖 名詞表（隨時查）</a></li><li><a href="index.html">3. 🗺️ 總覽與職業路線圖</a></li><li><a href="10.html">4. 📅 個人化課表（N8）</a></li><li><a href="tracker.html">5. 📊 打牌紀錄與資金儀表板</a></li><li><a href="01.html">6. 🗓️ 26 週課表（通用版）</a></li><li><a href="02.html">7. 🃏 翻前完整體系</a></li><li><a href="03.html">8. ♠️ 翻後攻略 I：單次加注底池</a></li><li><a href="04.html">9. ♦️ 翻後攻略 II：3-bet 底池等</a></li><li><a href="05.html">10. 🎯 剝削與對手分析</a></li><li><a href="06.html">11. 🧠 GTO Wizard 使用手冊</a></li><li><a href="07.html">12. 💰 心理、資金、流程與職業化</a>（本頁）</li><li><a href="08.html">13. ✅ 各階段審核檢視與目標</a></li><li><a href="09.html">14. 📝 模板</a></li><li><a href="install.html">15. 📱 安裝到 iPhone 主畫面</a></li></ol></details><nav class="pager"><a href="06.html">← 上一章：GTO Wizard 使用手冊</a><a href="08.html">下一章：各階段審核檢視與目標 →</a></nav>
+</article></main>
+</div>
+<button id="backTop" class="backtop" aria-label="回到頂端">↑</button>
+<div id="toast" class="toast">有新版本，點一下重新整理</div>
+<script>
+(function(){
+ var root=document.documentElement,body=document.body;
+ var PAGE=body.getAttribute('data-page'),TOTAL=parseInt(body.getAttribute('data-total')||'0',10);
+ var saved=null;try{saved=localStorage.getItem('theme');}catch(e){}
+ if(saved)root.setAttribute('data-theme',saved);
+ var tb=document.getElementById('themeToggle');
+ function syncIcon(){if(tb)tb.textContent=root.getAttribute('data-theme')==='light'?'🌙 深色':'☀️ 淺色';}
+ syncIcon();
+ if(tb)tb.addEventListener('click',function(){var t=root.getAttribute('data-theme')==='light'?'dark':'light';root.setAttribute('data-theme',t);try{localStorage.setItem('theme',t);}catch(e){}syncIcon();});
+ var b=document.getElementById('navToggle'),s=document.getElementById('sidebar'),ov=document.getElementById('overlay'),sc=document.getElementById('sbClose');
+ function closeNav(){if(s)s.classList.remove('open');if(ov)ov.classList.remove('show');}
+ function toggleNav(ev){if(ev){ev.preventDefault();ev.stopPropagation();}if(!s)return;var open=!s.classList.contains('open');s.classList.toggle('open',open);if(ov)ov.classList.toggle('show',open);}
+ if(b&&s){b.addEventListener('click',toggleNav);b.addEventListener('touchend',function(ev){toggleNav(ev);},{passive:false});}
+ if(ov)ov.addEventListener('click',closeNav);
+ if(sc)sc.addEventListener('click',closeNav);
+ if(s)s.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){closeNav();});});
+ function getRead(){try{return JSON.parse(localStorage.getItem('readPages')||'[]');}catch(e){return [];}}
+ function setRead(a){try{localStorage.setItem('readPages',JSON.stringify(a));}catch(e){}renderRead();}
+ function markRead(p){if(!p)return;var r=getRead();if(r.indexOf(p)<0){r.push(p);setRead(r);}}
+ function renderRead(){var r=getRead();document.querySelectorAll('.sidebar li[data-page]').forEach(function(li){li.classList.toggle('read',r.indexOf(li.getAttribute('data-page'))>=0);});
+  var c=document.getElementById('readCount');if(c)c.textContent=r.length;var ring=document.getElementById('ringFg');if(ring){var pct=TOTAL?Math.min(100,Math.round(r.length/TOTAL*100)):0;ring.style.strokeDashoffset=100-pct;}}
+ document.querySelectorAll('.sidebar .mark').forEach(function(m){m.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();var li=m.closest('li');var p=li.getAttribute('data-page');var r=getRead();var i=r.indexOf(p);if(i>=0)r.splice(i,1);else r.push(p);setRead(r);});});
+ renderRead();
+ var pb=document.getElementById('progress'),bt=document.getElementById('backTop');
+ function onScroll(){var h=document.documentElement;var sc=h.scrollTop||body.scrollTop;var max=h.scrollHeight-h.clientHeight;var p=max>0?sc/max:1;if(pb)pb.style.width=(p*100)+'%';if(bt)bt.classList.toggle('show',sc>600);if(p>0.88&&max>400)markRead(PAGE);}
+ window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+ if(bt)bt.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+ var els=document.querySelectorAll('article h2, article h3, article .table-wrap, article .callout, article pre, article blockquote, article .widget, article > ul, article > ol, article .chap-card, article .g-entry');
+ els.forEach(function(e){e.classList.add('reveal');});
+ if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{rootMargin:'0px 0px -6% 0px'});els.forEach(function(e){io.observe(e);});}
+ else{els.forEach(function(e){e.classList.add('in');});}
+ setTimeout(function(){els.forEach(function(e){var r=e.getBoundingClientRect();if(r.top<window.innerHeight)e.classList.add('in');});},80);
+ var heads=Array.prototype.slice.call(document.querySelectorAll('article h2[id], article h3[id]'));var tocLinks={};
+ document.querySelectorAll('details.toc a[href^="#"]').forEach(function(a){tocLinks[a.getAttribute('href').slice(1)]=a;});
+ if('IntersectionObserver' in window&&heads.length){var io2=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var id=x.target.id;Object.keys(tocLinks).forEach(function(k){tocLinks[k].classList.toggle('active',k===id);});}});},{rootMargin:'-8% 0px -78% 0px'});heads.forEach(function(h){io2.observe(h);});}
+ var touch=window.matchMedia&&window.matchMedia('(hover: none)').matches;
+ if(touch){document.querySelectorAll('a.term').forEach(function(a){a.addEventListener('click',function(ev){if(!a.classList.contains('show')){ev.preventDefault();document.querySelectorAll('a.term.show').forEach(function(o){o.classList.remove('show');});a.classList.add('show');}});});
+  document.addEventListener('click',function(ev){if(!ev.target.closest('a.term'))document.querySelectorAll('a.term.show').forEach(function(o){o.classList.remove('show');});});}
+ var q=document.getElementById('gsearch');
+ if(q){q.addEventListener('input',function(){var v=q.value.trim().toLowerCase();document.querySelectorAll('.g-entry').forEach(function(e){e.style.display=(!v||e.textContent.toLowerCase().indexOf(v)>=0)?'':'none';});
+  document.querySelectorAll('.g-cat').forEach(function(c){var any=Array.prototype.some.call(c.querySelectorAll('.g-entry'),function(e){return e.style.display!=='none';});c.style.display=any?'':'none';});});}
+ if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){
+  navigator.serviceWorker.register('sw.js').then(function(reg){reg.addEventListener('updatefound',function(){var nw=reg.installing;if(!nw)return;nw.addEventListener('statechange',function(){if(nw.state==='installed'&&navigator.serviceWorker.controller){var t=document.getElementById('toast');if(t){t.classList.add('show');t.onclick=function(){location.reload();};}}});});}).catch(function(){});}
+})();
+</script>
+</body>
+</html>
