@@ -9,12 +9,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="撲克培訓">
 <meta name="format-detection" content="telephone=no">
-<meta name="description" content="每天記手數與結果，自動算該打的級別、勝率與進度">
+<meta name="description" content="獨立的記帳 App：記手數與結果，自動算級別、勝率與分析">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
-<title>打牌紀錄與資金儀表板 · NL25 → 職業選手 培訓教材</title>
+<title>撲克帳本 App：打牌紀錄與資金儀表板 · NL25 → 職業選手 培訓教材</title>
 <style>
 :root{--bg:#07110e;--bg2:#0b1f19;--paper:rgba(16,32,26,.78);--paper2:rgba(255,255,255,.045);--ink:#ebe8e1;--muted:#a9b5ae;
 --accent:#f3c957;--accent2:#39d98a;--line:rgba(255,255,255,.12);--red:#ff7b7b;
@@ -204,6 +204,8 @@ a.term:hover::before,a.term.show::before{content:attr(data-tip);position:absolut
 .rm-title{font-weight:800}
 .rm-meta,.rm-gate{font-size:.9em;color:var(--muted)}
 .rm-gate{color:var(--ink);opacity:.9}
+.app-btn{display:block;text-align:center;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#c9962a);color:#1a1200;font-weight:900;font-size:1.15em;text-decoration:none;margin:10px 0;box-shadow:0 10px 30px rgba(243,201,87,.35);transition:.2s}
+.app-btn:hover{transform:translateY(-3px)}
 .chapters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;padding:0;background:none;border:none;box-shadow:none}
 .chap-card{display:block;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;transition:.22s;position:relative;overflow:hidden}
 .chap-card::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(243,201,87,.0),rgba(57,217,138,.0));transition:.3s}
@@ -246,295 +248,27 @@ a.term:hover::before,a.term.show::before{content:attr(data-tip);position:absolut
 </header>
 <div id="overlay" class="overlay"></div>
 <div class="layout">
-<nav class="sidebar" id="sidebar"><button type="button" class="sb-close" id="sbClose" aria-label="關閉目錄">✕</button><div class="sb-progress"><svg viewBox="0 0 36 36"><circle class="ring-bg" cx="18" cy="18" r="15.9" pathLength="100"/><circle id="ringFg" class="ring-fg" cx="18" cy="18" r="15.9" pathLength="100"/></svg><div><b id="readCount">0</b> / 15 章已讀<br><span class="hint">滾到頁尾自動標記；點圓圈可手動切換</span></div></div><h2>閱讀順序</h2><ol><li data-page="basics.html"><a href="basics.html"><span class="step">1.</span><span class="ico">🎓</span><span>新手基礎（先讀這章）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="glossary.html"><a href="glossary.html"><span class="step">2.</span><span class="ico">📖</span><span>名詞表（隨時查）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="index.html"><a href="index.html"><span class="step">3.</span><span class="ico">🗺️</span><span>總覽與職業路線圖</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="10.html"><a href="10.html"><span class="step">4.</span><span class="ico">📅</span><span>個人化課表（N8）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="tracker.html"><a href="tracker.html" class="current"><span class="step">5.</span><span class="ico">📊</span><span>打牌紀錄與資金儀表板</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="01.html"><a href="01.html"><span class="step">6.</span><span class="ico">🗓️</span><span>26 週課表（通用版）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="02.html"><a href="02.html"><span class="step">7.</span><span class="ico">🃏</span><span>翻前完整體系</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="03.html"><a href="03.html"><span class="step">8.</span><span class="ico">♠️</span><span>翻後攻略 I：單次加注底池</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="04.html"><a href="04.html"><span class="step">9.</span><span class="ico">♦️</span><span>翻後攻略 II：3-bet 底池等</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="05.html"><a href="05.html"><span class="step">10.</span><span class="ico">🎯</span><span>剝削與對手分析</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="06.html"><a href="06.html"><span class="step">11.</span><span class="ico">🧠</span><span>GTO Wizard 使用手冊</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="07.html"><a href="07.html"><span class="step">12.</span><span class="ico">💰</span><span>心理、資金、流程與職業化</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="08.html"><a href="08.html"><span class="step">13.</span><span class="ico">✅</span><span>各階段審核檢視與目標</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="09.html"><a href="09.html"><span class="step">14.</span><span class="ico">📝</span><span>模板</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="install.html"><a href="install.html"><span class="step">15.</span><span class="ico">📱</span><span>安裝到 iPhone 主畫面</span></a><button class="mark" title="標記已讀／未讀">✓</button></li></ol></nav>
+<nav class="sidebar" id="sidebar"><button type="button" class="sb-close" id="sbClose" aria-label="關閉目錄">✕</button><div class="sb-progress"><svg viewBox="0 0 36 36"><circle class="ring-bg" cx="18" cy="18" r="15.9" pathLength="100"/><circle id="ringFg" class="ring-fg" cx="18" cy="18" r="15.9" pathLength="100"/></svg><div><b id="readCount">0</b> / 15 章已讀<br><span class="hint">滾到頁尾自動標記；點圓圈可手動切換</span></div></div><h2>閱讀順序</h2><ol><li data-page="basics.html"><a href="basics.html"><span class="step">1.</span><span class="ico">🎓</span><span>新手基礎（先讀這章）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="glossary.html"><a href="glossary.html"><span class="step">2.</span><span class="ico">📖</span><span>名詞表（隨時查）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="index.html"><a href="index.html"><span class="step">3.</span><span class="ico">🗺️</span><span>總覽與職業路線圖</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="10.html"><a href="10.html"><span class="step">4.</span><span class="ico">📅</span><span>個人化課表（N8）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="tracker.html"><a href="tracker.html" class="current"><span class="step">5.</span><span class="ico">📊</span><span>撲克帳本 App</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="01.html"><a href="01.html"><span class="step">6.</span><span class="ico">🗓️</span><span>26 週課表（通用版）</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="02.html"><a href="02.html"><span class="step">7.</span><span class="ico">🃏</span><span>翻前完整體系</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="03.html"><a href="03.html"><span class="step">8.</span><span class="ico">♠️</span><span>翻後攻略 I：單次加注底池</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="04.html"><a href="04.html"><span class="step">9.</span><span class="ico">♦️</span><span>翻後攻略 II：3-bet 底池等</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="05.html"><a href="05.html"><span class="step">10.</span><span class="ico">🎯</span><span>剝削與對手分析</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="06.html"><a href="06.html"><span class="step">11.</span><span class="ico">🧠</span><span>GTO Wizard 使用手冊</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="07.html"><a href="07.html"><span class="step">12.</span><span class="ico">💰</span><span>心理、資金、流程與職業化</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="08.html"><a href="08.html"><span class="step">13.</span><span class="ico">✅</span><span>各階段審核檢視與目標</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="09.html"><a href="09.html"><span class="step">14.</span><span class="ico">📝</span><span>模板</span></a><button class="mark" title="標記已讀／未讀">✓</button></li><li data-page="install.html"><a href="install.html"><span class="step">15.</span><span class="ico">📱</span><span>安裝到 iPhone 主畫面</span></a><button class="mark" title="標記已讀／未讀">✓</button></li></ol></nav>
 <main class="content"><article>
-<div class="hero"><div class="hero-kicker">第 5 章 · 共 15 章 · 約 44 分鐘讀完</div><h1>打牌紀錄與資金儀表板</h1><div class="hero-suit">♠</div></div><details class="chapter-terms"><summary>📖 本章會用到的名詞（21 個）：點開看白話解釋與範例</summary><p class="hint">內文中帶虛線底線和小問號的詞，滑鼠移上去（手機：點一下）有提示，再點會到名詞表。</p><dl><div class="term-entry" id="ct-stakes"><dt>級別（NL2、NL25…）</dt><dd><p class="short">NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。</p><p class="long">NL25 代表盲注 $0.10/$0.25、標準買入 $25。數字越大級別越高，對手平均越強。各級別的盲注：NL2 = $0.01/$0.02，NL5 = $0.02/$0.05，NL10 = $0.05/$0.10，NL25 = $0.10/$0.25，NL50 = $0.25/$0.50，NL100 = $0.50/$1。</p><p class="example"><strong>範例：</strong>你有 $100，在 NL2 等於 50 個買入；在 NL25 只有 4 個買入。</p><a href="glossary.html#t-stakes">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-hands-count"><dt>手數</dt><dd><p class="short">你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。</p><p class="long">一般桌每桌每小時約 70 到 80 手，快速桌每桌每小時 200 手以上。勝率要有統計意義，需要 5 萬到 10 萬手。</p><p class="example"><strong>範例：</strong>2 桌一般桌打 1.5 小時，大約 220 手。</p><a href="glossary.html#t-hands-count">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-bankroll"><dt>資金管理</dt><dd><p class="short">決定用多少錢打哪個級別、什麼時候升級降級的規則。</p><p class="long">資金管理的目的是讓變異數不會把你淘汰。核心是「幾個買入」與升降級門檻，而且資金要和生活費分開。</p><p class="example"><strong>範例：</strong>$100 打 NL2（50 個買入），到 $150 升 NL5。</p><a href="glossary.html#t-bankroll">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-stop-loss"><dt>停損</dt><dd><p class="short">事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。</p><p class="long">本教材的規則：輸 3 個買入或出現 2 個 tilt 信號就休息 15 分鐘；輸 5 個買入結束當天。不設停贏。</p><p class="example"><strong>範例：</strong>在 NL2 輸到 $10 就關掉牌桌，去做復盤。</p><a href="glossary.html#t-stop-loss">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-winrate"><dt>勝率（bb/100）</dt><dd><p class="short">平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。</p><p class="long">勝率不是「贏的手數比例」，而是每 100 手的平均獲利，以 bb 計。NL25 的好玩家大約 4 到 8 bb/100。勝率需要很多手數才看得準。</p><p class="example"><strong>範例：</strong>打了 10 萬手，總共贏 5,000bb，勝率就是 5 bb/100。</p><a href="glossary.html#t-winrate">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-range"><dt>範圍</dt><dd><p class="short">一個玩家在某個情境下可能持有的所有起手牌的集合。撲克不是猜一手牌，是對一整組牌做決策。</p><p class="long">因為你看不到對手的牌，所以你只能問「他做了這個動作，可能是哪些牌？」這組牌就是範圍。範圍通常用 13×13 的格子表示（對子在對角線、同花在右上、不同花在左下），或用百分比表示（佔所有起手牌組合的比例）。</p><p class="example"><strong>範例：</strong>「BTN 開池 45%」表示按鈕位會加注最強的 45% 起手牌，大約從 AA 到 K5s、Q8s、J8s、T8s、A2o、K9o 這一帶。</p><a href="glossary.html#t-range">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-session"><dt>Session</dt><dd><p class="short">一次連續打牌的時段。</p><p class="long">本教材建議一個 session 90 到 120 分鐘，中間休息 15 分鐘，每天最多三個。每個 session 結束要寫日誌。</p><p class="example"><strong>範例：</strong>晚上 8 點到 9 點半打了一個 session，期間標記了 3 手不確定的牌。</p><a href="glossary.html#t-session">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-natural8"><dt>Natural8（N8、GG 網路）</dt><dd><p class="short">亞洲常用的線上撲克平台，屬於 GGPoker 網路。禁止 HUD，有 PokerCraft、Rush &amp; Cash、Fish Buffet。</p><p class="long">GG 網路的抽水方式與一般網路不同，GTO Wizard 有專門為 GG 解的範圍，選解時要選 GG 的抽水結構。</p><p class="example"><strong>範例：</strong>在 GTO Wizard 選 Cash → 6-max → 100bb → GG 的抽水結構。</p><a href="glossary.html#t-natural8">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-pokercraft"><dt>PokerCraft</dt><dd><p class="short">GG 網路（Natural8）客戶端內建的統計與手牌回顧工具。</p><p class="long">可以看自己的 VPIP、PFR、3-bet、WTSD、W$SD、走勢圖、回放手牌，並下載手牌歷史。這是你在 N8 上的「追蹤軟體」。</p><p class="example"><strong>範例：</strong>每週六打開 PokerCraft 看本週的 EV 走勢圖，截圖存進週檢視表。</p><a href="glossary.html#t-pokercraft">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-multitabling"><dt>多桌</dt><dd><p class="short">同時打好幾桌。手數變多，但每個決策的時間變少。</p><p class="long">加桌的規則：加桌後 EV bb/100 不低於前一個桌數的 80%，否則退回。新手從 2 桌開始。</p><p class="example"><strong>範例：</strong>2 桌 EV 8 bb/100，加到 4 桌變 5 bb/100（62%），退回 2 到 3 桌。</p><a href="glossary.html#t-multitabling">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-ev"><dt>EV（期望值）</dt><dd><p class="short">Expected Value，一個決策長期平均會賺或賠多少。</p><p class="long">撲克的目標是做 EV 最高的決策，不是這一手贏。同一個決策做一萬次的平均結果就是 EV。GTO Wizard 的 Trainer 和 Analyzer 都是用 EV 來評分。</p><p class="example"><strong>範例：</strong>一個跟注 60% 贏 10bb、40% 輸 5bb，EV = 0.6×10 − 0.4×5 = +4bb。</p><a href="glossary.html#t-ev">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-allin"><dt>全壓（all-in）</dt><dd><p class="short">把所有籌碼一次推進底池。</p><p class="long">全壓之後你不用再做任何決定，剩下的牌會直接發完比大小。100bb 的 5-bet 幾乎都是全壓。</p><p class="example"><strong>範例：</strong>對手 4-bet，你持 KK 全壓。</p><a href="glossary.html#t-allin">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-equity"><dt>權益（equity）</dt><dd><p class="short">你的牌對上對手的牌（或範圍），把牌全部發完後你贏的機率。</p><p class="long">權益不是「現在誰大」，而是「最後誰贏的機率」。聽牌雖然現在沒成牌，但有權益。底池賠率的決策就是在比較權益和要付的錢。</p><p class="example"><strong>範例：</strong>AK 對 QQ 的翻前權益約 44%，意思是發完五張牌 AK 大約 44% 會贏。</p><a href="glossary.html#t-equity">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-tilt"><dt>Tilt（上頭）</dt><dd><p class="short">因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。</p><p class="long">Tilt 不是「有沒有」，是「什麼時候、什麼情境」。每個人有自己的類型與早期信號。對策是停損規則與重置程序。</p><p class="example"><strong>範例：</strong>被 bad beat 之後下一手用 K7o 3-bet 魚，這是 tilt。</p><a href="glossary.html#t-tilt">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-review"><dt>復盤</dt><dd><p class="short">打完之後回頭檢視手牌：當時怎麼想、GTO 怎麼說、差在哪、以後怎麼做。</p><p class="long">復盤是進步的來源，比打牌本身更重要。用手牌復盤模板，每週至少 10 手。</p><p class="example"><strong>範例：</strong>復盤發現自己在 3-bet 底池面對小 c-bet 棄太多，下週改成多跟注。</p><a href="glossary.html#t-review">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-turn"><dt>轉牌</dt><dd><p class="short">第四張公共牌，以及它之後的下注回合。</p><p class="long">轉牌的底池通常已經比較大，下注尺寸也比較大，所以轉牌的錯誤比翻牌的錯誤貴。</p><p class="example"><strong>範例：</strong>翻牌 K♠7♦2♣ 之後轉牌發出 J♥，現在桌上有四張公共牌。</p><a href="glossary.html#t-turn">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-check-raise"><dt>Check-raise（x/r）</dt><dd><p class="short">先 check，對手下注後再加注。簡寫 x/r。</p><p class="long">沒位置的人最有力的武器。用強牌（set、兩對）做價值，用聽牌做半詐唬。微額的對手 check-raise 幾乎都有牌。</p><p class="example"><strong>範例：</strong>你在 BB 持 set，check，BTN c-bet 33%，你加注到 3.5 倍。</p><a href="glossary.html#t-check-raise">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-river"><dt>河牌</dt><dd><p class="short">第五張、也是最後一張公共牌，以及最後一個下注回合。</p><p class="long">河牌之後沒有牌會再來，所以不再有「聽牌」的概念：你要嘛是最好的牌，要嘛不是。河牌的決策只有三種：價值下注、詐唬、或是為了攤牌而 check/跟注。</p><p class="example"><strong>範例：</strong>河牌 3♣ 之後，桌面 K♠7♦2♣J♥3♣ 定案，兩邊比大小。</p><a href="glossary.html#t-river">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-passive"><dt>被動</dt><dd><p class="short">很少下注和加注、多半 check 和跟注的打法。</p><p class="long">被動玩家的下注和加注幾乎都是價值，所以面對他們的大注要多棄；他們 check 的時候可以多下注。</p><p class="example"><strong>範例：</strong>被動玩家在轉牌 check-raise 你，你的超對可以棄。</p><a href="glossary.html#t-passive">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-bb100"><dt>bb/100</dt><dd><p class="short">每 100 手的平均獲利，以大盲計。勝率的單位。</p><p class="long">用 bb/100 可以跨級別比較表現。好玩家在微額約 5 到 10 bb/100，在高級別 2 到 4 bb/100。</p><p class="example"><strong>範例：</strong>5 bb/100 在 NL25 等於每 100 手賺 $1.25。</p><a href="glossary.html#t-bb100">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-buyin"><dt>買入（BI）</dt><dd><p class="short">入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。</p><p class="long">買入數是資金夠不夠的量尺。一個 5bb/100 的贏家在 NL25 需要大約 30 到 40 個買入，才能把輸光的機率壓到 5% 以下。</p><p class="example"><strong>範例：</strong>NL2 的買入是 $2，$100 就是 50 個買入。</p><a href="glossary.html#t-buyin">在名詞表查看 →</a></dd></div></dl></details><details class="toc" open><summary>🧭 本頁目錄</summary><ol><li><a href="#s-每個欄位的意思">每個欄位的意思</a></li><li><a href="#s-數字是怎麼算的">數字是怎麼算的</a></li><li><a href="#s-備份與換手機">備份與換手機</a></li><li><a href="#s-跟教材的其他頁怎麼搭配">跟教材的其他頁怎麼搭配</a></li></ol></details>
-<div class="callout intro"><div class="callout-title"><span class="ci">💡</span>白話導讀</div><div class="callout-body">這一頁是你的記錄本加儀表板。每次打完牌花 30 秒填：日期、<a class="term" href="glossary.html#t-stakes" data-tip="NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。">級別</a>、<a class="term" href="glossary.html#t-hands-count" data-tip="你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。">手數</a>、結果。它會自動算出你現在的<a class="term" href="glossary.html#t-bankroll" data-tip="決定用多少錢打哪個級別、什麼時候升級降級的規則。">資金</a>、依教材的階梯<strong>現在該打哪個<a class="term" href="glossary.html#t-stakes" data-tip="NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。">級別</a></strong>、距離升級還差多少、這一級的<a class="term" href="glossary.html#t-stop-loss" data-tip="事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。">停損</a>金額、<a class="term" href="glossary.html#t-winrate" data-tip="平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。">勝率</a>與它的誤差<a class="term" href="glossary.html#t-range" data-tip="一個玩家在某個情境下可能持有的所有起手牌的集合。撲克不是猜一手牌，是對一整組牌做決策。">範圍</a>、本週<a class="term" href="glossary.html#t-hands-count" data-tip="你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。">手數</a>進度、累計手數對照階段門檻，還有<a class="term" href="glossary.html#t-bankroll" data-tip="決定用多少錢打哪個級別、什麼時候升級降級的規則。">資金</a>走勢圖。資料只存在這台裝置上，沒有伺服器、沒有帳號，記得定期匯出備份。</div></div>
-<div class="callout warn"><div class="callout-title"><span class="ci">⚠️</span>注意</div><div class="callout-body">iPhone 上，Safari 分頁和主畫面 App 的資料是分開的。請固定在主畫面的「撲克培訓」App 裡記錄，不要一下在 Safari 一下在 App。</div></div>
-<div class="widget tracker" id="tracker">
-<style>
-.tracker{padding:14px 16px}
-.tk-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:820px){.tk-grid{grid-template-columns:1fr}}
-.tk-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
-.tk-grid .tk-card{margin:0}
-.tk-card h3{margin:0 0 10px;font-size:1.05em}
-.tk-card h3::before{content:none}
-.tk-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tracker label{display:block;font-size:.9em;color:var(--muted);margin:6px 0}
-.tracker input[type=number],.tracker input[type=date],.tracker input[type=text],.tracker select{display:block;width:100%;font:inherit;font-size:1.02em;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper2);color:var(--ink);margin-top:3px;color-scheme:dark}
-[data-theme="light"] .tracker input,[data-theme="light"] .tracker select{color-scheme:light}
-.tk-check{display:flex!important;align-items:center;gap:8px;margin-top:30px!important;color:var(--ink)!important}
-.tk-check input{width:20px;height:20px}
-.tk-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.tk-btn{font:inherit;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper2);color:var(--ink);cursor:pointer}
-.tk-btn.primary{background:var(--accent);color:#1a1200;font-weight:800;border-color:transparent}
-.tk-btn.danger{color:#ff8a8a}
-.tk-btn.small{padding:4px 10px;font-size:.85em}
-.tk-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.tk-kpi{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.tk-kpi .v{font-size:1.45em;font-weight:900;color:var(--accent);line-height:1.2}
-.tk-kpi .l{font-size:.82em;color:var(--muted)}
-.tk-kpi .s{font-size:.78em;color:var(--muted);margin-top:3px;line-height:1.4}
-.tk-level{font-size:2.3em;font-weight:900;color:var(--accent2);line-height:1.1}
-.tk-msg{margin:8px 0;padding:8px 12px;border-radius:8px;font-size:.93em;line-height:1.6}
-.tk-msg.ok{background:rgba(57,217,138,.12);border:1px solid rgba(57,217,138,.35)}
-.tk-msg.warn{background:rgba(255,140,66,.14);border:1px solid rgba(255,140,66,.45)}
-.tk-msg.info{background:var(--paper2);border:1px solid var(--line)}
-.tk-table{width:100%;font-size:.9em;border-collapse:collapse}
-.tk-table th,.tk-table td{padding:6px 8px;border-bottom:1px solid var(--line);border-right:none;text-align:left;white-space:nowrap}
-.tk-table thead th{position:static;background:none}
-.tk-table-wrap{overflow-x:auto}
-.tk-pos{color:var(--accent2);font-weight:700}.tk-neg{color:#ff7b7b;font-weight:700}
-.tk-chart{width:100%;height:auto;display:block;margin:6px 0 2px}
-.tk-sub{font-size:.85em;color:var(--muted)}
-.tk-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:6px 0}
-.tk-bar>div{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:999px;transition:width .4s}
-.tk-stage{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-size:.8em;text-align:center}
-.tk-stage div{padding:6px 4px;border-radius:8px;border:1px solid var(--line);background:var(--paper2);line-height:1.4}
-.tk-stage div.done{background:rgba(57,217,138,.18);border-color:var(--accent2)}
-.tk-stage div.cur{border-color:var(--accent)}
-.tk-set{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end}
-.tk-backup{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
-.tk-file{display:none}
-</style>
-
-<div id="tk-banner"></div>
-<div class="tk-grid">
- <section class="tk-card">
-  <h3>📝 記錄一個 session</h3>
-  <form id="tk-form" autocomplete="off">
-   <input type="hidden" id="tk-id">
-   <div class="tk-row">
-    <label>日期<input type="date" id="tk-date" required></label>
-    <label>打的級別<select id="tk-level"><option>NL2</option><option>NL5</option><option>NL10</option><option>NL25</option><option>NL50</option><option>NL100</option></select></label>
-   </div>
-   <div class="tk-row">
-    <label>手數<input type="number" id="tk-hands" min="0" step="1" inputmode="numeric" placeholder="例如 420" required></label>
-    <label>打了幾分鐘<input type="number" id="tk-min" min="0" step="1" inputmode="numeric" placeholder="例如 90"></label>
-   </div>
-   <div class="tk-row">
-    <label>結果（美元，輸就填負數）<input type="number" id="tk-result" step="0.01" inputmode="decimal" placeholder="例如 -1.5 或 3.2" required></label>
-    <label>EV 結果（美元，選填）<input type="number" id="tk-ev" step="0.01" inputmode="decimal" placeholder="PokerCraft 的 EV"></label>
-   </div>
-   <div class="tk-row">
-    <label>桌數<input type="number" id="tk-tables" min="1" max="12" step="1" value="2" inputmode="numeric"></label>
-    <label class="tk-check"><input type="checkbox" id="tk-tilt"> 這場有 tilt（情緒影響）</label>
-   </div>
-   <label>備註（一句話）<input type="text" id="tk-note" maxlength="140" placeholder="例如：轉牌被 x/r 棄了兩次，要查"></label>
-   <div class="tk-actions"><button type="submit" class="tk-btn primary">儲存</button><button type="button" id="tk-cancel" class="tk-btn" style="display:none">取消編輯</button></div>
-  </form>
- </section>
- <section class="tk-card">
-  <h3>💰 資金水位與該打的級別</h3>
-  <div id="tk-bank"></div>
- </section>
-</div>
-
-<section class="tk-card"><h3>📊 統計</h3><div id="tk-stats"></div></section>
-<section class="tk-card"><h3>📈 走勢</h3><div id="tk-charts"></div></section>
-<section class="tk-card"><h3>🗂 所有紀錄</h3><div id="tk-list"></div></section>
-
-<section class="tk-card">
- <h3>⚙️ 設定、存提款、備份</h3>
- <form id="tk-set-form" class="tk-set">
-  <label>起始資金（美元）<input type="number" id="tk-start" step="0.01" inputmode="decimal"></label>
-  <label>開始日期<input type="date" id="tk-startdate"></label>
-  <label>每週手數目標<input type="number" id="tk-goal" step="100" inputmode="numeric"></label>
-  <button type="submit" class="tk-btn">儲存設定</button>
- </form>
- <div class="tk-sub" style="margin-top:14px">存款或提款（存款填正數、提款填負數；這會改變資金，但不算進勝率）</div>
- <form id="tk-adj-form" class="tk-set">
-  <label>日期<input type="date" id="tk-adj-date"></label>
-  <label>金額<input type="number" id="tk-adj-amt" step="0.01" inputmode="decimal" placeholder="+50 或 -30"></label>
-  <label>說明<input type="text" id="tk-adj-note" maxlength="60" placeholder="例如：第一次存款"></label>
-  <button type="submit" class="tk-btn">加入</button>
- </form>
- <div id="tk-adj-list" style="margin-top:8px"></div>
- <div class="tk-sub" style="margin-top:14px">備份（資料只存在這台裝置，刪掉 App 或換手機就不見；匯出的檔案存到 iCloud 雲碟或傳給自己）</div>
- <div class="tk-backup">
-  <button type="button" id="tk-export" class="tk-btn primary">匯出備份檔（JSON）</button>
-  <button type="button" id="tk-csv" class="tk-btn">匯出 CSV（Excel 可開）</button>
-  <label class="tk-btn" style="margin:0">從備份檔還原<input type="file" id="tk-import" class="tk-file" accept=".json,application/json"></label>
-  <span id="tk-backup-info" class="tk-sub"></span>
- </div>
-</section>
-
-<script>
-(function(){
- var KEY='pokerTracker.v1';
- var LEVELS=[
-  {n:'NL2',bb:0.02,bi:2,entry:0,drop:null},
-  {n:'NL5',bb:0.05,bi:5,entry:150,drop:100},
-  {n:'NL10',bb:0.10,bi:10,entry:400,drop:300},
-  {n:'NL25',bb:0.25,bi:25,entry:1000,drop:750},
-  {n:'NL50',bb:0.50,bi:50,entry:2000,drop:1500},
-  {n:'NL100',bb:1,bi:100,entry:4000,drop:3000}
- ];
- var GATES=[['階段 1',20000],['階段 2',50000],['階段 3',80000],['階段 4',100000]];
- function $(id){return document.getElementById(id);}
- function pad(n){return (n<10?'0':'')+n;}
- function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
- function today(){return iso(new Date());}
- function addDays(ds,n){var d=new Date(ds+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);}
- function daysBetween(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);}
- function weekStart(ds){var d=new Date(ds+'T00:00:00');var dow=(d.getDay()+6)%7;d.setDate(d.getDate()-dow);return iso(d);}
- function fmt(x,d){d=d||0;var s=Math.abs(+x||0).toFixed(d);var p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');return ((+x||0)<0?'-':'')+p.join('.');}
- function money(x){x=+x||0;return (x<0?'-':'')+'$'+fmt(Math.abs(x),2);}
- function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
- function lvl(name){for(var i=0;i<LEVELS.length;i++)if(LEVELS[i].n===name)return LEVELS[i];return LEVELS[0];}
- function hasEv(s){return s.ev!==null&&s.ev!==undefined&&s.ev!==''&&!isNaN(+s.ev);}
- function defaults(){return {settings:{startBankroll:100,startDate:today(),weeklyGoal:3000},sessions:[],adjustments:[],lastBackup:null};}
- function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.sessions){d.adjustments=d.adjustments||[];d.settings=d.settings||defaults().settings;return d;}}catch(e){}return defaults();}
- var D=load();
- function save(){try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){alert('儲存失敗：'+e.message);}render();}
- function sorted(){return D.sessions.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:(a.id-b.id);});}
- function bankroll(){var b=+D.settings.startBankroll||0;D.sessions.forEach(function(s){b+=+s.result||0;});D.adjustments.forEach(function(a){b+=+a.amount||0;});return b;}
-
- function stats(){
-  var ss=sorted();var t={hands:0,result:0,ev:0,evHands:0,minutes:0,sessions:ss.length,bb:0,evbb:0,byLevel:{},tilt30:0,breaches:0,best:null,worst:null,days:{}};
-  var cutoff=addDays(today(),-30);
-  ss.forEach(function(s){var L=lvl(s.level);var h=+s.hands||0,r=+s.result||0;
-   t.hands+=h;t.result+=r;t.minutes+=+s.minutes||0;t.bb+=r/L.bb;
-   if(hasEv(s)){t.ev+=+s.ev;t.evHands+=h;t.evbb+=(+s.ev)/L.bb;}
-   var b=t.byLevel[s.level]||(t.byLevel[s.level]={hands:0,result:0,bb:0,ev:0,evbb:0,evHands:0,sessions:0,minutes:0});
-   b.hands+=h;b.result+=r;b.bb+=r/L.bb;b.sessions++;b.minutes+=+s.minutes||0;if(hasEv(s)){b.ev+=+s.ev;b.evbb+=(+s.ev)/L.bb;b.evHands+=h;}
-   if(s.tilt&&s.date>=cutoff)t.tilt30++;
-   if(r<=-5*L.bi)t.breaches++;
-   if(!t.best||r>+t.best.result)t.best=s;if(!t.worst||r<+t.worst.result)t.worst=s;
-   t.days[s.date]=(t.days[s.date]||0)+h;});
-  t.bb100=t.hands?t.bb/t.hands*100:null;t.evbb100=t.evHands?t.evbb/t.evHands*100:null;
-  for(var k in t.byLevel){var x=t.byLevel[k];x.bb100=x.hands?x.bb/x.hands*100:null;x.evbb100=x.evHands?x.evbb/x.evHands*100:null;}
-  t.hourly=t.minutes?t.result/(t.minutes/60):null;
-  t.ci=t.hands?1.96*100/Math.sqrt(t.hands/100):null;
-  var wk=weekStart(today()),mon=today().slice(0,7);t.weekHands=0;t.monthHands=0;
-  ss.forEach(function(s){if(s.date>=wk)t.weekHands+=+s.hands||0;if(s.date.slice(0,7)===mon)t.monthHands+=+s.hands||0;});
-  t.activeDays=Object.keys(t.days).length;t.avgPerDay=t.activeDays?t.hands/t.activeDays:0;
-  var st=0,d=today();if(!t.days[d])d=addDays(d,-1);while(t.days[d]){st++;d=addDays(d,-1);}t.streak=st;
-  t.lastLevel=ss.length?ss[ss.length-1].level:null;
-  return t;}
-
- function recommend(bank,t){
-  var idx=0;for(var i=0;i<LEVELS.length;i++)if(bank>=LEVELS[i].entry)idx=i;
-  var msgs=[];
-  if(idx>=3){var nl10=t.byLevel['NL10'];var wr=nl10?(nl10.evbb100!==null?nl10.evbb100:nl10.bb100):null;var ok=!!nl10&&nl10.hands>=50000&&wr!==null&&wr>=3;
-   if(!ok&&idx===3){msgs.push({c:'warn',m:'資金已經到 NL25 的門檻（$1,000），但升 NL25 還需要「NL10 累計 50k 手、EV ≥ 3 bb/100」。目前 NL10：'+fmt(nl10?nl10.hands:0)+' 手、'+(wr===null?'—':fmt(wr,1))+' bb/100。先留在 NL10。'});idx=2;}}
-  var last=t.lastLevel,li=-1;for(var j=0;j<LEVELS.length;j++)if(LEVELS[j].n===last)li=j;
-  if(li>idx){if(LEVELS[li].drop!==null&&bank>=LEVELS[li].drop){idx=li;msgs.push({c:'info',m:'你最近在打 '+last+'，資金 '+money(bank)+' 還在它的降級線 $'+LEVELS[li].drop+' 之上，可以留在這一級；低於降級線就退。'});}
-   else msgs.push({c:'warn',m:'你最近在打 '+last+'，但資金已經低於它的降級線 $'+LEVELS[li].drop+'。請退回 '+LEVELS[idx].n+'，不要存款補。'});}
-  var L=LEVELS[idx];var bis=bank/L.bi;
-  if(bis<20)msgs.push({c:'warn',m:'目前只有 '+fmt(bis,1)+' 個買入，低於 20，破產風險很高。照階梯打，手數比結果重要。'});
-  if(idx===0&&bank<50)msgs.push({c:'warn',m:'資金低於 $50（25 個 NL2 買入以下）。教材的規則：停打兩週只做研究與 Trainer，這代表有漏洞，不是變異數。'});
-  return {level:L,next:LEVELS[idx+1]||null,bis:bis,msgs:msgs};}
-
- function kpi(l,v,s){return '<div class="tk-kpi"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="s">'+(s||'')+'</div></div>';}
-
- function renderBank(t){var bank=bankroll();var r=recommend(bank,t);var L=r.level,next=r.next;
-  var span=next?next.entry-L.entry:L.bi*40;var p=next?Math.min(100,Math.max(0,(bank-L.entry)/span*100)):100;
-  var h='<div class="tk-kpis">'
-   +'<div class="tk-kpi"><div class="l">目前資金</div><div class="v">'+money(bank)+'</div><div class="s">起始 '+money(D.settings.startBankroll)+'，累計輸贏 '+money(t.result)+'</div></div>'
-   +'<div class="tk-kpi"><div class="l">現在應該打</div><div class="tk-level">'+L.n+'</div><div class="s">'+fmt(r.bis,1)+' 個買入（每次帶 $'+L.bi+' 上桌）</div></div>'
-   +'<div class="tk-kpi"><div class="l">這一級的停損</div><div class="v">$'+(3*L.bi)+' / $'+(5*L.bi)+'</div><div class="s">輸 3 個買入休息 15 分鐘；輸 5 個買入今天結束</div></div>'
-   +(next?'<div class="tk-kpi"><div class="l">升到 '+next.n+' 還差</div><div class="v">'+money(Math.max(0,next.entry-bank))+'</div><div class="s">門檻 $'+fmt(next.entry)+(L.drop!==null?'；降級線 $'+fmt(L.drop):'')+'</div></div>':'')
-   +'</div><div class="tk-bar"><div style="width:'+p.toFixed(0)+'%"></div></div><div class="tk-sub">'+L.n+' → '+(next?next.n:'上限')+' 的進度 '+p.toFixed(0)+'%</div>';
-  r.msgs.forEach(function(m){h+='<div class="tk-msg '+m.c+'">'+m.m+'</div>';});
-  if(!r.msgs.length&&t.sessions)h+='<div class="tk-msg ok">資金與級別一致，照目前的級別打。</div>';
-  $('tk-bank').innerHTML=h;}
-
- function renderStats(t){var goal=+D.settings.weeklyGoal||3000;var wp=Math.min(100,t.weekHands/goal*100);
-  var h='<div class="tk-kpis">'
-   +kpi('總手數',fmt(t.hands),t.sessions+' 個 session、'+t.activeDays+' 個打牌日')
-   +kpi('本週手數',fmt(t.weekHands),'目標 '+fmt(goal)+'（'+wp.toFixed(0)+'%），週一起算')
-   +kpi('本月手數',fmt(t.monthHands),'每個打牌日平均 '+fmt(t.avgPerDay)+' 手')
-   +kpi('勝率',t.bb100===null?'—':fmt(t.bb100,1)+' bb/100',t.ci===null?'':'95% 區間 ±'+fmt(t.ci,1)+'，手數越多越窄')
-   +kpi('EV 勝率',t.evbb100===null?'—':fmt(t.evbb100,1)+' bb/100',t.evHands?'來自有填 EV 的 '+fmt(t.evHands)+' 手':'在 PokerCraft 看到 EV 後填進來')
-   +kpi('時薪',t.hourly===null?'—':money(t.hourly)+'/hr','共 '+fmt(t.minutes/60,1)+' 小時')
-   +kpi('連續記錄',t.streak+' 天','每天記，習慣比結果重要')
-   +kpi('近 30 天 tilt',t.tilt30+' 次',t.breaches?'有 '+t.breaches+' 場輸超過 5 個買入（違反停損）':'沒有違反停損的場次')
-   +'</div><div class="tk-bar" style="margin-top:12px"><div style="width:'+wp.toFixed(0)+'%"></div></div><div class="tk-sub">本週手數 '+fmt(t.weekHands)+' / '+fmt(goal)+'</div>';
-  h+='<div class="tk-sub" style="margin-top:12px">累計手數對照教材的階段門檻</div><div class="tk-stage">';var curSet=false;
-  GATES.forEach(function(g){var done=t.hands>=g[1];var cls=done?'done':(!curSet?'cur':'');if(!done)curSet=true;h+='<div class="'+cls+'"><b>'+g[0]+'</b><br>'+fmt(g[1])+' 手<br>'+(done?'✓ 達標':'還差 '+fmt(g[1]-t.hands))+'</div>';});h+='</div>';
-  var keys=LEVELS.map(function(l){return l.n;}).filter(function(k){return t.byLevel[k];});
-  if(keys.length){h+='<div class="tk-table-wrap" style="margin-top:12px"><table class="tk-table"><thead><tr><th>級別</th><th>手數</th><th>結果</th><th>bb/100</th><th>EV bb/100</th><th>Session</th><th>小時</th></tr></thead><tbody>';
-   keys.forEach(function(k){var b=t.byLevel[k];h+='<tr><td>'+k+'</td><td>'+fmt(b.hands)+'</td><td class="'+(b.result>=0?'tk-pos':'tk-neg')+'">'+money(b.result)+'</td><td>'+(b.bb100===null?'—':fmt(b.bb100,1))+'</td><td>'+(b.evbb100===null?'—':fmt(b.evbb100,1))+'</td><td>'+b.sessions+'</td><td>'+fmt(b.minutes/60,1)+'</td></tr>';});
-   h+='</tbody></table></div>';}
-  if(t.best)h+='<div class="tk-sub" style="margin-top:8px">最好的一場：'+t.best.date+' '+t.best.level+' '+money(t.best.result)+'；最差的一場：'+t.worst.date+' '+t.worst.level+' '+money(t.worst.result)+'</div>';
-  if(t.hands&&t.hands<10000)h+='<div class="tk-msg info">手數還不到 1 萬，勝率的數字幾乎沒有意義（區間 ±'+fmt(t.ci,0)+' bb/100）。現在要看的是流程：手數有沒有達標、停損有沒有守、tilt 有幾次。</div>';
-  else if(t.hands>=10000&&t.hands<50000)h+='<div class="tk-msg info">1 萬到 5 萬手之間，勝率只能看方向（區間 ±'+fmt(t.ci,0)+'）。到 5 萬手再對照升級門檻。</div>';
-  $('tk-stats').innerHTML=h;}
-
- function renderCharts(t){var ss=sorted();var h='';
-  var events=[];ss.forEach(function(s){events.push({date:s.date,amt:+s.result||0,id:s.id});});D.adjustments.forEach(function(a){events.push({date:a.date,amt:+a.amount||0,id:a.id});});
-  events.sort(function(x,y){return x.date<y.date?-1:x.date>y.date?1:x.id-y.id;});
-  var b=+D.settings.startBankroll||0;var pts=[{y:b}];events.forEach(function(e){b+=e.amt;pts.push({y:b});});
-  if(pts.length>1){var W=600,H=200,P=36;var ys=pts.map(function(p){return p.y;});var mn=Math.min.apply(null,ys),mx=Math.max.apply(null,ys);if(mx===mn){mx+=1;mn-=1;}var pd=(mx-mn)*.12;mn-=pd;mx+=pd;
-   var sx=function(i){return P+(W-2*P)*i/(pts.length-1);},sy=function(v){return H-P-(H-2*P)*(v-mn)/(mx-mn);};
-   var d=pts.map(function(p,i){return (i?'L':'M')+sx(i).toFixed(1)+','+sy(p.y).toFixed(1);}).join(' ');var s0=sy(+D.settings.startBankroll||0);
-   h+='<div class="tk-sub">資金走勢（每個點是一個 session 或一次存提款）</div><svg class="tk-chart" viewBox="0 0 '+W+' '+H+'">'
-    +'<line x1="'+P+'" y1="'+s0.toFixed(1)+'" x2="'+(W-P)+'" y2="'+s0.toFixed(1)+'" stroke="rgba(128,128,128,.5)" stroke-dasharray="4 4"/>'
-    +'<path d="'+d+'" fill="none" stroke="#f3c957" stroke-width="2.5" stroke-linejoin="round"/>';
-   pts.forEach(function(p,i){h+='<circle cx="'+sx(i).toFixed(1)+'" cy="'+sy(p.y).toFixed(1)+'" r="3" fill="#39d98a"/>';});
-   h+='<text x="'+P+'" y="'+(P-12)+'" fill="#8fa39a" font-size="11">最高 '+money(Math.max.apply(null,ys))+'</text><text x="'+P+'" y="'+(H-P+16)+'" fill="#8fa39a" font-size="11">最低 '+money(Math.min.apply(null,ys))+'</text><text x="'+(W-P)+'" y="'+(H-P+16)+'" fill="#8fa39a" font-size="11" text-anchor="end">現在 '+money(b)+'</text></svg>';}
-  var days=[];for(var i=27;i>=0;i--)days.push(addDays(today(),-i));var vals=days.map(function(dd){return t.days[dd]||0;});var mxv=Math.max.apply(null,vals.concat([1]));var tot=vals.reduce(function(a,c){return a+c;},0);
-  var W2=600,H2=150,P2=28,bw=(W2-2*P2)/28;h+='<div class="tk-sub" style="margin-top:12px">最近 28 天每天的手數（合計 '+fmt(tot)+'）</div><svg class="tk-chart" viewBox="0 0 '+W2+' '+H2+'">';
-  vals.forEach(function(v,i){var bh=(H2-2*P2)*v/mxv;h+='<rect x="'+(P2+i*bw+1).toFixed(1)+'" y="'+(H2-P2-bh).toFixed(1)+'" width="'+(bw-2).toFixed(1)+'" height="'+Math.max(bh,v?2:0).toFixed(1)+'" fill="'+(v?'#39d98a':'rgba(128,128,128,.18)')+'" rx="2"/>'+(v?'':'<rect x="'+(P2+i*bw+1).toFixed(1)+'" y="'+(H2-P2-2)+'" width="'+(bw-2).toFixed(1)+'" height="2" fill="rgba(128,128,128,.25)"/>');});
-  h+='<text x="'+P2+'" y="'+(H2-P2+14)+'" fill="#8fa39a" font-size="10">'+days[0].slice(5)+'</text><text x="'+(W2-P2)+'" y="'+(H2-P2+14)+'" fill="#8fa39a" font-size="10" text-anchor="end">'+days[27].slice(5)+'（今天）</text><text x="'+P2+'" y="'+(P2-8)+'" fill="#8fa39a" font-size="10">單日最多 '+fmt(mxv)+' 手</text></svg>';
-  $('tk-charts').innerHTML=h;}
-
- function renderList(){var ss=sorted().reverse();if(!ss.length){$('tk-list').innerHTML='<div class="tk-sub">還沒有紀錄。打完第一個 session 就來填，30 秒就好。</div>';return;}
-  var h='<div class="tk-table-wrap"><table class="tk-table"><thead><tr><th>日期</th><th>級別</th><th>手數</th><th>分鐘</th><th>結果</th><th>EV</th><th>桌</th><th>tilt</th><th>備註</th><th></th></tr></thead><tbody>';
-  ss.slice(0,60).forEach(function(s){h+='<tr><td>'+s.date+'</td><td>'+s.level+'</td><td>'+fmt(s.hands)+'</td><td>'+(s.minutes||'')+'</td><td class="'+(+s.result>=0?'tk-pos':'tk-neg')+'">'+money(+s.result)+'</td><td>'+(hasEv(s)?money(+s.ev):'')+'</td><td>'+(s.tables||'')+'</td><td>'+(s.tilt?'⚠':'')+'</td><td style="white-space:normal;min-width:120px">'+esc(s.note)+'</td><td><button type="button" class="tk-btn small" data-edit="'+s.id+'">改</button> <button type="button" class="tk-btn small danger" data-del="'+s.id+'">刪</button></td></tr>';});
-  h+='</tbody></table></div>'+(ss.length>60?'<div class="tk-sub">只顯示最近 60 筆；全部資料都在備份檔裡。</div>':'');
-  $('tk-list').innerHTML=h;
-  $('tk-list').querySelectorAll('[data-edit]').forEach(function(bt){bt.addEventListener('click',function(){edit(+bt.getAttribute('data-edit'));});});
-  $('tk-list').querySelectorAll('[data-del]').forEach(function(bt){bt.addEventListener('click',function(){if(confirm('刪除這筆紀錄？')){D.sessions=D.sessions.filter(function(s){return s.id!==+bt.getAttribute('data-del');});save();}});});}
-
- function renderSettings(){$('tk-start').value=D.settings.startBankroll;$('tk-startdate').value=D.settings.startDate||today();$('tk-goal').value=D.settings.weeklyGoal||3000;if(!$('tk-adj-date').value)$('tk-adj-date').value=today();
-  var h='';if(D.adjustments.length){h='<table class="tk-table"><tbody>';D.adjustments.slice().sort(function(a,b){return a.date<b.date?1:-1;}).forEach(function(a){h+='<tr><td>'+a.date+'</td><td class="'+(+a.amount>=0?'tk-pos':'tk-neg')+'">'+money(+a.amount)+'</td><td style="white-space:normal">'+esc(a.note)+'</td><td><button type="button" class="tk-btn small danger" data-adel="'+a.id+'">刪</button></td></tr>';});h+='</tbody></table>';}
-  $('tk-adj-list').innerHTML=h;$('tk-adj-list').querySelectorAll('[data-adel]').forEach(function(bt){bt.addEventListener('click',function(){if(confirm('刪除這筆存提款？')){D.adjustments=D.adjustments.filter(function(a){return a.id!==+bt.getAttribute('data-adel');});save();}});});
-  var info=D.lastBackup?'上次備份：'+D.lastBackup+'（'+daysBetween(D.lastBackup,today())+' 天前）':'還沒備份過';$('tk-backup-info').textContent=info;}
-
- function renderBanner(){var h='';var isIOS=/iP(hone|ad|od)/.test(navigator.userAgent);if(isIOS&&!navigator.standalone)h+='<div class="tk-msg warn">你現在是在 Safari 裡打開的。iPhone 上 Safari 和主畫面 App 的資料是分開的，請固定在主畫面的「撲克培訓」App 裡記錄，不然會變成兩份資料。</div>';
-  if(D.sessions.length&&(!D.lastBackup||daysBetween(D.lastBackup,today())>7))h+='<div class="tk-msg warn">超過 7 天沒備份了（或從沒備份）。到最下面按「匯出備份檔」，存到 iCloud 雲碟。</div>';
-  $('tk-banner').innerHTML=h;}
-
- function render(){var t=stats();renderBanner();renderBank(t);renderStats(t);renderCharts(t);renderList();renderSettings();}
-
- function lastLevelDefault(){var ss=sorted();if(ss.length)return ss[ss.length-1].level;return recommend(bankroll(),stats()).level.n;}
- function resetForm(){$('tk-form').reset();$('tk-id').value='';$('tk-date').value=today();$('tk-tables').value=2;$('tk-level').value=lastLevelDefault();$('tk-cancel').style.display='none';}
- function edit(id){var s=D.sessions.filter(function(x){return x.id===id;})[0];if(!s)return;$('tk-id').value=s.id;$('tk-date').value=s.date;$('tk-level').value=s.level;$('tk-hands').value=s.hands;$('tk-min').value=s.minutes||'';$('tk-result').value=s.result;$('tk-ev').value=hasEv(s)?s.ev:'';$('tk-tables').value=s.tables||2;$('tk-tilt').checked=!!s.tilt;$('tk-note').value=s.note||'';$('tk-cancel').style.display='';$('tk-form').scrollIntoView({behavior:'smooth',block:'center'});}
- $('tk-form').addEventListener('submit',function(ev){ev.preventDefault();var id=$('tk-id').value?+$('tk-id').value:Date.now();
-  var s={id:id,date:$('tk-date').value||today(),level:$('tk-level').value,hands:Math.max(0,parseInt($('tk-hands').value,10)||0),minutes:Math.max(0,parseInt($('tk-min').value,10)||0),result:Math.round((parseFloat($('tk-result').value)||0)*100)/100,ev:$('tk-ev').value===''?null:Math.round((parseFloat($('tk-ev').value)||0)*100)/100,tables:parseInt($('tk-tables').value,10)||1,tilt:$('tk-tilt').checked,note:$('tk-note').value.trim()};
-  D.sessions=D.sessions.filter(function(x){return x.id!==id;});D.sessions.push(s);save();resetForm();$('tk-bank').scrollIntoView({behavior:'smooth',block:'start'});});
- $('tk-cancel').addEventListener('click',resetForm);
- $('tk-set-form').addEventListener('submit',function(ev){ev.preventDefault();D.settings.startBankroll=Math.round((parseFloat($('tk-start').value)||0)*100)/100;D.settings.startDate=$('tk-startdate').value||today();D.settings.weeklyGoal=parseInt($('tk-goal').value,10)||3000;save();});
- $('tk-adj-form').addEventListener('submit',function(ev){ev.preventDefault();var a={id:Date.now(),date:$('tk-adj-date').value||today(),amount:Math.round((parseFloat($('tk-adj-amt').value)||0)*100)/100,note:$('tk-adj-note').value.trim()};if(!a.amount){alert('金額不能是 0');return;}D.adjustments.push(a);save();$('tk-adj-amt').value='';$('tk-adj-note').value='';});
- function dl(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);}
- $('tk-export').addEventListener('click',function(){var blob=new Blob([JSON.stringify({app:'poker-tracker',version:1,exportedAt:new Date().toISOString(),data:D},null,1)],{type:'application/json'});dl(blob,'poker-tracker-'+today()+'.json');D.lastBackup=today();save();});
- $('tk-csv').addEventListener('click',function(){var rows=[['date','level','hands','minutes','result_usd','ev_usd','tables','tilt','note']];sorted().forEach(function(s){rows.push([s.date,s.level,s.hands,s.minutes||'',s.result,hasEv(s)?s.ev:'',s.tables||'',s.tilt?1:0,String(s.note||'').replace(/"/g,'""')]);});
-  var csv='﻿'+rows.map(function(r){return r.map(function(c){return '"'+String(c)+'"';}).join(',');}).join('\r\n');dl(new Blob([csv],{type:'text/csv;charset=utf-8'}),'poker-sessions-'+today()+'.csv');});
- $('tk-import').addEventListener('change',function(){var f=this.files[0];var inp=this;if(!f)return;var r=new FileReader();r.onload=function(){try{var j=JSON.parse(r.result);var d=j.data||j;if(!d||!d.sessions)throw new Error('這不是本頁匯出的備份檔');
-   if(confirm('還原會覆蓋這台裝置目前的紀錄（'+D.sessions.length+' 筆）。確定要用備份檔的 '+d.sessions.length+' 筆取代嗎？')){D=d;D.adjustments=D.adjustments||[];D.settings=D.settings||defaults().settings;save();alert('已還原 '+D.sessions.length+' 筆紀錄。');}}catch(e){alert('還原失敗：'+e.message);}inp.value='';};r.readAsText(f);});
- resetForm();render();
-})();
-</script>
-</div>
-
+<div class="hero"><div class="hero-kicker">第 5 章 · 共 15 章 · 約 3 分鐘讀完</div><h1>撲克帳本 App：打牌紀錄與資金儀表板</h1><div class="hero-suit">♠</div></div><details class="chapter-terms"><summary>📖 本章會用到的名詞（19 個）：點開看白話解釋與範例</summary><p class="hint">內文中帶虛線底線和小問號的詞，滑鼠移上去（手機：點一下）有提示，再點會到名詞表。</p><dl><div class="term-entry" id="ct-bankroll"><dt>資金管理</dt><dd><p class="short">決定用多少錢打哪個級別、什麼時候升級降級的規則。</p><p class="long">資金管理的目的是讓變異數不會把你淘汰。核心是「幾個買入」與升降級門檻，而且資金要和生活費分開。</p><p class="example"><strong>範例：</strong>$100 打 NL2（50 個買入），到 $150 升 NL5。</p><a href="glossary.html#t-bankroll">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-stakes"><dt>級別（NL2、NL25…）</dt><dd><p class="short">NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。</p><p class="long">NL25 代表盲注 $0.10/$0.25、標準買入 $25。數字越大級別越高，對手平均越強。各級別的盲注：NL2 = $0.01/$0.02，NL5 = $0.02/$0.05，NL10 = $0.05/$0.10，NL25 = $0.10/$0.25，NL50 = $0.25/$0.50，NL100 = $0.50/$1。</p><p class="example"><strong>範例：</strong>你有 $100，在 NL2 等於 50 個買入；在 NL25 只有 4 個買入。</p><a href="glossary.html#t-stakes">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-tilt"><dt>Tilt（上頭）</dt><dd><p class="short">因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。</p><p class="long">Tilt 不是「有沒有」，是「什麼時候、什麼情境」。每個人有自己的類型與早期信號。對策是停損規則與重置程序。</p><p class="example"><strong>範例：</strong>被 bad beat 之後下一手用 K7o 3-bet 魚，這是 tilt。</p><a href="glossary.html#t-tilt">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-downswing"><dt>下風期</dt><dd><p class="short">連續一段時間輸錢，即使你打得沒有變差。</p><p class="long">下風期是變異數的正常表現，不是錯誤的證據。應對方式是看 EV、照流程、不升級、不追輸。</p><p class="example"><strong>範例：</strong>連續兩週輸了 12 個買入，但 EV bb/100 是正的，這是下風期。</p><a href="glossary.html#t-downswing">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-hands-count"><dt>手數</dt><dd><p class="short">你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。</p><p class="long">一般桌每桌每小時約 70 到 80 手，快速桌每桌每小時 200 手以上。勝率要有統計意義，需要 5 萬到 10 萬手。</p><p class="example"><strong>範例：</strong>2 桌一般桌打 1.5 小時，大約 220 手。</p><a href="glossary.html#t-hands-count">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-pokercraft"><dt>PokerCraft</dt><dd><p class="short">GG 網路（Natural8）客戶端內建的統計與手牌回顧工具。</p><p class="long">可以看自己的 VPIP、PFR、3-bet、WTSD、W$SD、走勢圖、回放手牌，並下載手牌歷史。這是你在 N8 上的「追蹤軟體」。</p><p class="example"><strong>範例：</strong>每週六打開 PokerCraft 看本週的 EV 走勢圖，截圖存進週檢視表。</p><a href="glossary.html#t-pokercraft">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-multitabling"><dt>多桌</dt><dd><p class="short">同時打好幾桌。手數變多，但每個決策的時間變少。</p><p class="long">加桌的規則：加桌後 EV bb/100 不低於前一個桌數的 80%，否則退回。新手從 2 桌開始。</p><p class="example"><strong>範例：</strong>2 桌 EV 8 bb/100，加到 4 桌變 5 bb/100（62%），退回 2 到 3 桌。</p><a href="glossary.html#t-multitabling">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-ev"><dt>EV（期望值）</dt><dd><p class="short">Expected Value，一個決策長期平均會賺或賠多少。</p><p class="long">撲克的目標是做 EV 最高的決策，不是這一手贏。同一個決策做一萬次的平均結果就是 EV。GTO Wizard 的 Trainer 和 Analyzer 都是用 EV 來評分。</p><p class="example"><strong>範例：</strong>一個跟注 60% 贏 10bb、40% 輸 5bb，EV = 0.6×10 − 0.4×5 = +4bb。</p><a href="glossary.html#t-ev">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-allin"><dt>全壓（all-in）</dt><dd><p class="short">把所有籌碼一次推進底池。</p><p class="long">全壓之後你不用再做任何決定，剩下的牌會直接發完比大小。100bb 的 5-bet 幾乎都是全壓。</p><p class="example"><strong>範例：</strong>對手 4-bet，你持 KK 全壓。</p><a href="glossary.html#t-allin">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-equity"><dt>權益（equity）</dt><dd><p class="short">你的牌對上對手的牌（或範圍），把牌全部發完後你贏的機率。</p><p class="long">權益不是「現在誰大」，而是「最後誰贏的機率」。聽牌雖然現在沒成牌，但有權益。底池賠率的決策就是在比較權益和要付的錢。</p><p class="example"><strong>範例：</strong>AK 對 QQ 的翻前權益約 44%，意思是發完五張牌 AK 大約 44% 會贏。</p><a href="glossary.html#t-equity">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-winrate"><dt>勝率（bb/100）</dt><dd><p class="short">平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。</p><p class="long">勝率不是「贏的手數比例」，而是每 100 手的平均獲利，以 bb 計。NL25 的好玩家大約 4 到 8 bb/100。勝率需要很多手數才看得準。</p><p class="example"><strong>範例：</strong>打了 10 萬手，總共贏 5,000bb，勝率就是 5 bb/100。</p><a href="glossary.html#t-winrate">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-review"><dt>復盤</dt><dd><p class="short">打完之後回頭檢視手牌：當時怎麼想、GTO 怎麼說、差在哪、以後怎麼做。</p><p class="long">復盤是進步的來源，比打牌本身更重要。用手牌復盤模板，每週至少 10 手。</p><p class="example"><strong>範例：</strong>復盤發現自己在 3-bet 底池面對小 c-bet 棄太多，下週改成多跟注。</p><a href="glossary.html#t-review">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-turn"><dt>轉牌</dt><dd><p class="short">第四張公共牌，以及它之後的下注回合。</p><p class="long">轉牌的底池通常已經比較大，下注尺寸也比較大，所以轉牌的錯誤比翻牌的錯誤貴。</p><p class="example"><strong>範例：</strong>翻牌 K♠7♦2♣ 之後轉牌發出 J♥，現在桌上有四張公共牌。</p><a href="glossary.html#t-turn">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-check-raise"><dt>Check-raise（x/r）</dt><dd><p class="short">先 check，對手下注後再加注。簡寫 x/r。</p><p class="long">沒位置的人最有力的武器。用強牌（set、兩對）做價值，用聽牌做半詐唬。微額的對手 check-raise 幾乎都有牌。</p><p class="example"><strong>範例：</strong>你在 BB 持 set，check，BTN c-bet 33%，你加注到 3.5 倍。</p><a href="glossary.html#t-check-raise">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-river"><dt>河牌</dt><dd><p class="short">第五張、也是最後一張公共牌，以及最後一個下注回合。</p><p class="long">河牌之後沒有牌會再來，所以不再有「聽牌」的概念：你要嘛是最好的牌，要嘛不是。河牌的決策只有三種：價值下注、詐唬、或是為了攤牌而 check/跟注。</p><p class="example"><strong>範例：</strong>河牌 3♣ 之後，桌面 K♠7♦2♣J♥3♣ 定案，兩邊比大小。</p><a href="glossary.html#t-river">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-passive"><dt>被動</dt><dd><p class="short">很少下注和加注、多半 check 和跟注的打法。</p><p class="long">被動玩家的下注和加注幾乎都是價值，所以面對他們的大注要多棄；他們 check 的時候可以多下注。</p><p class="example"><strong>範例：</strong>被動玩家在轉牌 check-raise 你，你的超對可以棄。</p><a href="glossary.html#t-passive">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-buyin"><dt>買入（BI）</dt><dd><p class="short">入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。</p><p class="long">買入數是資金夠不夠的量尺。一個 5bb/100 的贏家在 NL25 需要大約 30 到 40 個買入，才能把輸光的機率壓到 5% 以下。</p><p class="example"><strong>範例：</strong>NL2 的買入是 $2，$100 就是 50 個買入。</p><a href="glossary.html#t-buyin">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-stop-loss"><dt>停損</dt><dd><p class="short">事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。</p><p class="long">本教材的規則：輸 3 個買入或出現 2 個 tilt 信號就休息 15 分鐘；輸 5 個買入結束當天。不設停贏。</p><p class="example"><strong>範例：</strong>在 NL2 輸到 $10 就關掉牌桌，去做復盤。</p><a href="glossary.html#t-stop-loss">在名詞表查看 →</a></dd></div><div class="term-entry" id="ct-sample"><dt>樣本（樣本量）</dt><dd><p class="short">你用來下結論的手數。樣本太小的統計沒有意義。</p><p class="long">對手的 VPIP 要 30 手以上才有方向、100 手才可靠；3-bet 要 150 手；攤牌類統計要 300 手以上。</p><p class="example"><strong>範例：</strong>看了對手 12 手，他 VPIP 50%，這不代表他是魚，樣本太小。</p><a href="glossary.html#t-sample">在名詞表查看 →</a></dd></div></dl></details><details class="toc" open><summary>🧭 本頁目錄</summary><ol><li><a href="#s-怎麼裝到主畫面">怎麼裝到主畫面</a></li><li><a href="#s-每個欄位的意思">每個欄位的意思</a></li><li><a href="#s-它算了什麼">它算了什麼</a></li><li><a href="#s-備份與換手機">備份與換手機</a></li></ol></details>
+<div class="callout intro"><div class="callout-title"><span class="ci">💡</span>白話導讀</div><div class="callout-body">記錄不放在教材裡，而是做成另一個 App「撲克帳本」。它像記帳軟體：每場打完花 30 秒記，首頁會用水位動畫顯示你的<a class="term" href="glossary.html#t-bankroll" data-tip="決定用多少錢打哪個級別、什麼時候升級降級的規則。">資金</a>、依教材的階梯告訴你<strong>現在該打哪個<a class="term" href="glossary.html#t-stakes" data-tip="NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。">級別</a></strong>，統計分頁有走勢圖與熱力圖，分析分頁會自動告訴你 <a class="term" href="glossary.html#t-tilt" data-tip="因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。">tilt</a> 對你的影響、哪個時段打得好、離升級還要多久、有沒有在<a class="term" href="glossary.html#t-downswing" data-tip="連續一段時間輸錢，即使你打得沒有變差。">下風期</a>，還有成就徽章。贏了會撒彩帶，升級會慶祝。</div></div>
+<div class="widget applink"><div class="widget-title">📊 撲克帳本是另一個 App</div><p>它跟教材分開，有自己的圖示，可以單獨加到主畫面。資料存在你的手機裡，沒有帳號、沒有伺服器。</p><a class="app-btn" href="app/index.html">打開撲克帳本 →</a><p class="hint">第一次打開後，用 Safari 的分享 → 加入主畫面，主畫面就會多一個「撲克帳本」。</p></div>
+<hr>
+<h2 id="s-怎麼裝到主畫面">怎麼裝到主畫面</h2>
+<ol><li>用 Safari 打開上面的按鈕（網址是教材網址後面加 <code>app/</code>）。</li><li>分享 → 加入主畫面 → 名稱「撲克帳本」→ 加入。</li><li>之後固定從主畫面的「撲克帳本」圖示打開。<strong>Safari 裡和主畫面 App 裡的資料是分開的</strong>，不要兩邊都記。</li></ol>
 <hr>
 <h2 id="s-每個欄位的意思">每個欄位的意思</h2>
-<div class="table-wrap"><table><thead><tr><th>欄位</th><th>填什麼</th><th>哪裡看</th></tr></thead><tbody><tr><td data-label="欄位">日期</td><td data-label="填什麼">這個 <a class="term" href="glossary.html#t-session" data-tip="一次連續打牌的時段。">session</a> 的日期</td><td data-label="哪裡看">預設今天</td></tr><tr><td data-label="欄位">打的級別</td><td data-label="填什麼">你這場實際打的級別（NL2、NL5…）</td><td data-label="哪裡看">牌桌名稱</td></tr><tr><td data-label="欄位">手數</td><td data-label="填什麼">這場打了幾手</td><td data-label="哪裡看"><a class="term" href="glossary.html#t-natural8" data-tip="亞洲常用的線上撲克平台，屬於 GGPoker 網路。禁止 HUD，有 PokerCraft、Rush &amp; Cash、Fish Buffet。">Natural8</a> 的 <a class="term" href="glossary.html#t-pokercraft" data-tip="GG 網路（Natural8）客戶端內建的統計與手牌回顧工具。">PokerCraft</a>，或桌上的手牌計數</td></tr><tr><td data-label="欄位">打了幾分鐘</td><td data-label="填什麼">這場的時間，用來算時薪</td><td data-label="哪裡看">自己記</td></tr><tr><td data-label="欄位">結果</td><td data-label="填什麼">這場的輸贏（美元），輸就填負數，例如 -1.5</td><td data-label="哪裡看">離桌時的籌碼減上桌時的籌碼；<a class="term" href="glossary.html#t-multitabling" data-tip="同時打好幾桌。手數變多，但每個決策的時間變少。">多桌</a>就加總</td></tr><tr><td data-label="欄位"><a class="term" href="glossary.html#t-ev" data-tip="Expected Value，一個決策長期平均會賺或賠多少。">EV</a> 結果</td><td data-label="填什麼"><a class="term" href="glossary.html#t-allin" data-tip="把所有籌碼一次推進底池。">全壓</a>時用<a class="term" href="glossary.html#t-equity" data-tip="你的牌對上對手的牌（或範圍），把牌全部發完後你贏的機率。">權益</a>修正過的輸贏（美元），選填</td><td data-label="哪裡看"><a class="term" href="glossary.html#t-pokercraft" data-tip="GG 網路（Natural8）客戶端內建的統計與手牌回顧工具。">PokerCraft</a> 的 <a class="term" href="glossary.html#t-ev" data-tip="Expected Value，一個決策長期平均會賺或賠多少。">EV</a> 曲線</td></tr><tr><td data-label="欄位">桌數</td><td data-label="填什麼">同時開幾桌</td><td data-label="哪裡看">自己記</td></tr><tr><td data-label="欄位">這場有 <a class="term" href="glossary.html#t-tilt" data-tip="因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。">tilt</a></td><td data-label="填什麼">打到一半情緒影響了決策就勾</td><td data-label="哪裡看">誠實勾，這是給自己看的</td></tr><tr><td data-label="欄位">備註</td><td data-label="填什麼">一句話：今天要<a class="term" href="glossary.html#t-review" data-tip="打完之後回頭檢視手牌：當時怎麼想、GTO 怎麼說、差在哪、以後怎麼做。">復盤</a>的事</td><td data-label="哪裡看">例如「<a class="term" href="glossary.html#t-turn" data-tip="第四張公共牌，以及它之後的下注回合。">轉牌</a>被 <a class="term" href="glossary.html#t-check-raise" data-tip="先 check，對手下注後再加注。簡寫 x/r。">x/r</a> 棄兩次，要查」</td></tr></tbody></table></div>
-<div class="callout example"><div class="callout-title"><span class="ci">🎲</span>舉例</div><div class="callout-body">今天在 NL2 開 2 桌打了 90 分鐘、共 410 手，上桌各帶 $2（合計 $4），離桌時合計 $5.3，所以結果是 +1.3。PokerCraft 顯示 EV 是 +0.8，就填 0.8。沒有 <a class="term" href="glossary.html#t-tilt" data-tip="因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。">tilt</a>，備註寫「<a class="term" href="glossary.html#t-river" data-tip="第五張、也是最後一張公共牌，以及最後一個下注回合。">河牌</a><a class="term" href="glossary.html#t-passive" data-tip="很少下注和加注、多半 check 和跟注的打法。">被動</a>玩家大注都棄，照教材」。</div></div>
+<div class="table-wrap"><table><thead><tr><th>欄位</th><th>填什麼</th><th>哪裡看</th></tr></thead><tbody><tr><td data-label="欄位">打的<a class="term" href="glossary.html#t-stakes" data-tip="NL 是無限注德州撲克，數字是標準買入的美金（等於 100 個大盲）。">級別</a></td><td data-label="填什麼">這場實際打的級別（NL2、NL5…）</td><td data-label="哪裡看">牌桌名稱</td></tr><tr><td data-label="欄位">日期、時段</td><td data-label="填什麼">哪一天、早上／下午／晚上／深夜</td><td data-label="哪裡看">預設今天與現在的時段</td></tr><tr><td data-label="欄位"><a class="term" href="glossary.html#t-hands-count" data-tip="你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。">手數</a></td><td data-label="填什麼">這場打了幾手（有 ±100 按鈕）</td><td data-label="哪裡看"><a class="term" href="glossary.html#t-pokercraft" data-tip="GG 網路（Natural8）客戶端內建的統計與手牌回顧工具。">PokerCraft</a> 或桌上的手牌計數</td></tr><tr><td data-label="欄位">打了幾分鐘</td><td data-label="填什麼">用來算時薪與「打太久會不會變差」</td><td data-label="哪裡看">自己記</td></tr><tr><td data-label="欄位">贏了／輸了＋金額</td><td data-label="填什麼">這場的輸贏，只填數字，正負用按鈕選</td><td data-label="哪裡看">離桌籌碼減上桌籌碼，<a class="term" href="glossary.html#t-multitabling" data-tip="同時打好幾桌。手數變多，但每個決策的時間變少。">多桌</a>加總</td></tr><tr><td data-label="欄位"><a class="term" href="glossary.html#t-ev" data-tip="Expected Value，一個決策長期平均會賺或賠多少。">EV</a> 結果</td><td data-label="填什麼"><a class="term" href="glossary.html#t-allin" data-tip="把所有籌碼一次推進底池。">全壓</a>時用<a class="term" href="glossary.html#t-equity" data-tip="你的牌對上對手的牌（或範圍），把牌全部發完後你贏的機率。">權益</a>修正過的輸贏（美元），選填</td><td data-label="哪裡看"><a class="term" href="glossary.html#t-pokercraft" data-tip="GG 網路（Natural8）客戶端內建的統計與手牌回顧工具。">PokerCraft</a> 的 <a class="term" href="glossary.html#t-ev" data-tip="Expected Value，一個決策長期平均會賺或賠多少。">EV</a> 曲線</td></tr><tr><td data-label="欄位">今天的狀態</td><td data-label="填什麼">累／普通／好／超好</td><td data-label="哪裡看">誠實選，分析會告訴你狀態對<a class="term" href="glossary.html#t-winrate" data-tip="平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。">勝率</a>的影響</td></tr><tr><td data-label="欄位">有 <a class="term" href="glossary.html#t-tilt" data-tip="因為情緒（輸錢、犯錯、覺得不公平）而打得比平常差的狀態。">tilt</a> 嗎</td><td data-label="填什麼">情緒影響了決策就選「有一點」</td><td data-label="哪裡看">誠實選</td></tr><tr><td data-label="欄位">一句話</td><td data-label="填什麼">今天要<a class="term" href="glossary.html#t-review" data-tip="打完之後回頭檢視手牌：當時怎麼想、GTO 怎麼說、差在哪、以後怎麼做。">復盤</a>的事</td><td data-label="哪裡看">例如「<a class="term" href="glossary.html#t-turn" data-tip="第四張公共牌，以及它之後的下注回合。">轉牌</a>被 <a class="term" href="glossary.html#t-check-raise" data-tip="先 check，對手下注後再加注。簡寫 x/r。">x/r</a> 棄兩次，要查」</td></tr></tbody></table></div>
+<div class="callout example"><div class="callout-title"><span class="ci">🎲</span>舉例</div><div class="callout-body">今天晚上在 NL2 開 2 桌打了 90 分鐘共 410 手，上桌各帶 $2，離桌合計 $5.3，所以選「贏了」填 1.3。PokerCraft 的 EV 是 +0.8 就填 0.8。狀態「好」、沒有 tilt、備註「<a class="term" href="glossary.html#t-river" data-tip="第五張、也是最後一張公共牌，以及最後一個下注回合。">河牌</a><a class="term" href="glossary.html#t-passive" data-tip="很少下注和加注、多半 check 和跟注的打法。">被動</a>玩家大注都棄，照教材」。</div></div>
 <hr>
-<h2 id="s-數字是怎麼算的">數字是怎麼算的</h2>
-<div class="table-wrap"><table><thead><tr><th>數字</th><th>算法</th></tr></thead><tbody><tr><td data-label="數字">目前資金</td><td data-label="算法">起始資金 ＋ 所有 <a class="term" href="glossary.html#t-session" data-tip="一次連續打牌的時段。">session</a> 的結果 ＋ 存提款</td></tr><tr><td data-label="數字">現在應該打</td><td data-label="算法">教材的資金階梯（<a href="10.html">個人化課表 §2.3</a>）：資金 ≥ $150 升 NL5、≥ $400 升 NL10、≥ $1,000 升 NL25（另需 NL10 累計 50k 手且 EV ≥ 3 <a class="term" href="glossary.html#t-bb100" data-tip="每 100 手的平均獲利，以大盲計。勝率的單位。">bb/100</a>）。你最近打的級別若資金仍在它的降級線之上，會建議留在原級；低於降級線就建議退</td></tr><tr><td data-label="數字"><a class="term" href="glossary.html#t-stop-loss" data-tip="事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。">停損</a></td><td data-label="算法">當級<a class="term" href="glossary.html#t-buyin" data-tip="入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。">買入</a>的 3 倍（休息 15 分鐘）與 5 倍（當天結束）</td></tr><tr><td data-label="數字"><a class="term" href="glossary.html#t-winrate" data-tip="平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。">勝率</a> <a class="term" href="glossary.html#t-bb100" data-tip="每 100 手的平均獲利，以大盲計。勝率的單位。">bb/100</a></td><td data-label="算法">把每場結果換成該級別的大盲數，加總後除以總手數再乘 100</td></tr><tr><td data-label="數字">95% 區間</td><td data-label="算法">± 1.96 × 100 ÷ √(手數 ÷ 100)。1 萬手約 ±20，5 萬手約 ±9，10 萬手約 ±6</td></tr><tr><td data-label="數字">EV 勝率</td><td data-label="算法">只用有填 EV 的場次算，方法同上</td></tr><tr><td data-label="數字">時薪</td><td data-label="算法">總結果 ÷ 總小時</td></tr><tr><td data-label="數字">本週手數</td><td data-label="算法">從週一開始累計，目標預設 3,000（設定裡可改）</td></tr><tr><td data-label="數字">階段門檻</td><td data-label="算法">累計手數對照教材的 20k / 50k / 80k / 100k</td></tr><tr><td data-label="數字">違反停損</td><td data-label="算法">單場輸超過當級 5 個<a class="term" href="glossary.html#t-buyin" data-tip="入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。">買入</a>的場次數</td></tr></tbody></table></div>
-<div class="callout why"><div class="callout-title"><span class="ci">🔎</span>怎麼讀這張表</div><div class="callout-body">前 1 萬手勝率的數字沒有意義，誤差比數字本身大。那段時間看的是「手數有沒有達標、停損有沒有守、tilt 幾次」。到 5 萬手再拿勝率對照升級門檻。</div></div>
+<h2 id="s-它算了什麼">它算了什麼</h2>
+<div class="table-wrap"><table><thead><tr><th>分頁</th><th>內容</th></tr></thead><tbody><tr><td data-label="分頁">首頁</td><td data-label="內容"><a class="term" href="glossary.html#t-bankroll" data-tip="決定用多少錢打哪個級別、什麼時候升級降級的規則。">資金</a>水位（到下一級的進度）、現在該打的級別、<a class="term" href="glossary.html#t-buyin" data-tip="入座時帶上桌的籌碼，標準是 100bb。資金管理用「幾個買入」計算。">買入</a>數、<a class="term" href="glossary.html#t-stop-loss" data-tip="事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。">停損</a>金額、升級差額、今天與本週<a class="term" href="glossary.html#t-hands-count" data-tip="你打過幾手牌。手數是衡量「量」與「樣本夠不夠」的單位。">手數</a>目標、連續記錄天數、最近的場次</td></tr><tr><td data-label="分頁">統計</td><td data-label="內容">資金走勢圖、核心數字（總手數、本月、<a class="term" href="glossary.html#t-winrate" data-tip="平均每 100 手贏幾個大盲。這是撲克衡量「打得好不好」的標準單位。">勝率</a>與 95% 區間、EV 勝率、時薪、贏輸場、最長連贏、最大回撤）、12 週熱力圖、28 天長條圖、各級別表、階段門檻、所有場次</td></tr><tr><td data-label="分頁">分析</td><td data-label="內容">自動分析：<a class="term" href="glossary.html#t-sample" data-tip="你用來下結論的手數。樣本太小的統計沒有意義。">樣本</a>大小提醒、升級預估、<a class="term" href="glossary.html#t-downswing" data-tip="連續一段時間輸錢，即使你打得沒有變差。">下風期</a>偵測、最大回撤、tilt 的影響、場次長度、時段、星期、狀態、<a class="term" href="glossary.html#t-stop-loss" data-tip="事先規定「輸到多少就停」，避免在 tilt 狀態下繼續輸。">停損</a>紀律、量、運氣（實際 vs EV）、波動；成就徽章 16 個</td></tr><tr><td data-label="分頁">設定</td><td data-label="內容">起始資金、開始日期、每週目標、特效開關、存提款、備份匯出／還原、CSV、清除</td></tr></tbody></table></div>
+<p>數字的算法和教材一致：資金 = 起始 ＋ 所有結果 ＋ 存提款；級別照 <a href="10.html">個人化課表 §2.3</a> 的階梯（含降級線與 NL25 的 50k 手 EV ≥ 3 門檻）；勝率把每場換成該級別的大盲數再除以手數；95% 區間 = ±1.96 × 100 ÷ √(手數 ÷ 100)。</p>
+<div class="callout why"><div class="callout-title"><span class="ci">🔎</span>怎麼讀這張表</div><div class="callout-body">前 1 萬手勝率的數字沒有意義，誤差比數字大；那段時間看「手數、停損、tilt」。到 5 萬手再拿勝率對照升級門檻。分析分頁會自動在每一條裡提醒你<a class="term" href="glossary.html#t-sample" data-tip="你用來下結論的手數。樣本太小的統計沒有意義。">樣本</a>夠不夠。</div></div>
 <hr>
 <h2 id="s-備份與換手機">備份與換手機</h2>
-<ol><li>每週匯出一次備份檔（JSON），iPhone 會問你存哪裡，選「儲存到檔案」→ iCloud 雲碟。超過 7 天沒備份，頁面最上面會提醒。</li><li>換手機或重裝 App：先裝好 App，到這一頁最下面按「從備份檔還原」，選那個 JSON 檔。</li><li>「匯出 CSV」可以用 Excel 或 Google 試算表打開看，但不能用來還原。</li></ol>
-<hr>
-<h2 id="s-跟教材的其他頁怎麼搭配">跟教材的其他頁怎麼搭配</h2>
-<ul><li>每個 session 結束：先在這裡填數字（30 秒），再用 <a href="09.html">模板</a> 的 session 日誌寫 3 手標記的牌與一句話檢討。</li><li>每週六：看這頁的「本週手數」「近 30 天 tilt」「勝率」，填進週檢視表；資金到門檻就照 <a href="10.html">個人化課表</a> 升級。</li><li>統計數字怪怪的（例如連續輸很多）：先看 <a href="08.html">各階段審核檢視</a> §7 的診斷表，不要先懷疑運氣。</li></ul>
-<details class="toc all-chapters"><summary>📚 所有章節</summary><ol><li><a href="basics.html">1. 🎓 新手基礎（先讀這章）</a></li><li><a href="glossary.html">2. 📖 名詞表（隨時查）</a></li><li><a href="index.html">3. 🗺️ 總覽與職業路線圖</a></li><li><a href="10.html">4. 📅 個人化課表（N8）</a></li><li><a href="tracker.html">5. 📊 打牌紀錄與資金儀表板</a>（本頁）</li><li><a href="01.html">6. 🗓️ 26 週課表（通用版）</a></li><li><a href="02.html">7. 🃏 翻前完整體系</a></li><li><a href="03.html">8. ♠️ 翻後攻略 I：單次加注底池</a></li><li><a href="04.html">9. ♦️ 翻後攻略 II：3-bet 底池等</a></li><li><a href="05.html">10. 🎯 剝削與對手分析</a></li><li><a href="06.html">11. 🧠 GTO Wizard 使用手冊</a></li><li><a href="07.html">12. 💰 心理、資金、流程與職業化</a></li><li><a href="08.html">13. ✅ 各階段審核檢視與目標</a></li><li><a href="09.html">14. 📝 模板</a></li><li><a href="install.html">15. 📱 安裝到 iPhone 主畫面</a></li></ol></details><nav class="pager"><a href="10.html">← 上一章：個人化課表（N8）</a><a href="01.html">下一章：26 週課表（通用版） →</a></nav>
+<p>每週在「設定」按一次「匯出備份檔」，存到 iCloud 雲碟。換手機或重裝：裝好 App → 設定 → 從備份檔還原。超過 7 天沒備份，設定分頁會顯示。</p>
+<details class="toc all-chapters"><summary>📚 所有章節</summary><ol><li><a href="basics.html">1. 🎓 新手基礎（先讀這章）</a></li><li><a href="glossary.html">2. 📖 名詞表（隨時查）</a></li><li><a href="index.html">3. 🗺️ 總覽與職業路線圖</a></li><li><a href="10.html">4. 📅 個人化課表（N8）</a></li><li><a href="tracker.html">5. 📊 撲克帳本 App</a>（本頁）</li><li><a href="01.html">6. 🗓️ 26 週課表（通用版）</a></li><li><a href="02.html">7. 🃏 翻前完整體系</a></li><li><a href="03.html">8. ♠️ 翻後攻略 I：單次加注底池</a></li><li><a href="04.html">9. ♦️ 翻後攻略 II：3-bet 底池等</a></li><li><a href="05.html">10. 🎯 剝削與對手分析</a></li><li><a href="06.html">11. 🧠 GTO Wizard 使用手冊</a></li><li><a href="07.html">12. 💰 心理、資金、流程與職業化</a></li><li><a href="08.html">13. ✅ 各階段審核檢視與目標</a></li><li><a href="09.html">14. 📝 模板</a></li><li><a href="install.html">15. 📱 安裝到 iPhone 主畫面</a></li></ol></details><nav class="pager"><a href="10.html">← 上一章：個人化課表（N8）</a><a href="01.html">下一章：26 週課表（通用版） →</a></nav>
 </article></main>
 </div>
 <button id="backTop" class="backtop" aria-label="回到頂端">↑</button>

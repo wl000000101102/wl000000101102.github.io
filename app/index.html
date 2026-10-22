@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#0a1612">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="撲克帳本">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>撲克帳本</title>
+<style>
+:root{--bg:#0a1612;--bg2:#10231c;--card:rgba(255,255,255,.055);--card2:rgba(255,255,255,.09);--line:rgba(255,255,255,.12);--ink:#eef0ea;--muted:#9fb0a7;--gold:#f3c957;--gold2:#d9a52a;--green:#39d98a;--red:#ff6b7a;--blue:#6cb8ff;--purple:#b48cff;--safe-t:env(safe-area-inset-top);--safe-b:env(safe-area-inset-bottom)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.5;overscroll-behavior-y:none}
+body{background-image:radial-gradient(900px 500px at 10% -10%,rgba(57,217,138,.22),transparent 60%),radial-gradient(700px 400px at 100% 0%,rgba(243,201,87,.14),transparent 55%);min-height:100vh;padding-bottom:calc(84px + var(--safe-b))}
+button,input,select{font:inherit}
+.hdr{position:sticky;top:0;z-index:20;padding:calc(10px + var(--safe-t)) 18px 10px;display:flex;align-items:center;gap:10px;background:rgba(10,22,18,.9);border-bottom:1px solid var(--line)}
+.hdr .logo{width:30px;height:30px;border-radius:50%;background:conic-gradient(var(--gold) 0 25%,#fff 0 50%,var(--gold) 0 75%,#fff 0);position:relative;flex:0 0 30px}
+.hdr .logo::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--bg2);border:2px solid var(--gold)}
+.hdr h1{margin:0;font-size:1.15em;font-weight:900;letter-spacing:.02em}
+.hdr .sp{flex:1}
+.hdr .pill{font-size:.78em;padding:4px 10px;border-radius:999px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+main{padding:14px 16px 0;max-width:720px;margin:0 auto}
+.view{display:none;animation:fade .35s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 16px;margin:0 0 14px;box-shadow:0 10px 30px rgba(0,0,0,.25);position:relative;overflow:hidden}
+.card h2{margin:0 0 10px;font-size:.95em;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.card h2 .em{font-size:1.2em;margin-right:4px}
+.big{font-size:2.4em;font-weight:900;line-height:1.1;letter-spacing:-.01em}
+.gold{color:var(--gold)}.green{color:var(--green)}.red{color:var(--red)}.muted{color:var(--muted)}.blue{color:var(--blue)}
+.sub{font-size:.85em;color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.kpi .v{font-size:1.35em;font-weight:900;color:var(--gold);line-height:1.2}
+.kpi .l{font-size:.75em;color:var(--muted)}
+.kpi .s{font-size:.72em;color:var(--muted);margin-top:2px}
+.kpi.green .v{color:var(--green)}.kpi.red .v{color:var(--red)}.kpi.blue .v{color:var(--blue)}.kpi.purple .v{color:var(--purple)}
+/* bankroll tank */
+.tank{display:flex;gap:16px;align-items:center}
+.tank-wrap{width:110px;height:140px;flex:0 0 110px;border-radius:18px;border:2px solid rgba(243,201,87,.5);position:relative;overflow:hidden;background:rgba(0,0,0,.25)}
+.tank-fill{position:absolute;left:0;right:0;bottom:0;height:0%;transition:height 1.2s cubic-bezier(.2,.8,.2,1);background:linear-gradient(180deg,rgba(57,217,138,.9),rgba(26,127,79,.95))}
+.tank-wave{position:absolute;left:-50%;width:200%;height:24px;top:-12px;background:radial-gradient(circle at 10px 12px,rgba(255,255,255,.35) 6px,transparent 7px) 0 0/40px 24px repeat-x;opacity:.5;animation:wave 3s linear infinite}
+@keyframes wave{to{transform:translateX(40px)}}
+.tank-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;text-shadow:0 2px 6px rgba(0,0,0,.5)}
+.tank-label b{font-size:1.5em}
+.tank-label small{font-size:.72em;font-weight:600;opacity:.9}
+.lvl{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:linear-gradient(135deg,rgba(243,201,87,.35),rgba(243,201,87,.08));border:1px solid rgba(243,201,87,.6);font-weight:900;font-size:1.35em;color:var(--gold);box-shadow:0 0 24px rgba(243,201,87,.25);animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 18px rgba(243,201,87,.2)}50%{box-shadow:0 0 34px rgba(243,201,87,.45)}}
+.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:8px 0 4px}
+.bar>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--gold));width:0;transition:width 1s cubic-bezier(.2,.8,.2,1);position:relative}
+.bar>i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 2.2s linear infinite}
+@keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.msg{margin:8px 0 0;padding:9px 12px;border-radius:12px;font-size:.88em;line-height:1.55}
+.msg.ok{background:rgba(57,217,138,.12);border:1px solid rgba(57,217,138,.35)}
+.msg.warn{background:rgba(255,140,66,.14);border:1px solid rgba(255,140,66,.45)}
+.msg.info{background:var(--card2);border:1px solid var(--line)}
+.ring{width:84px;height:84px;flex:0 0 84px;position:relative}
+.ring svg{transform:rotate(-90deg);width:84px;height:84px}
+.ring .bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:8}
+.ring .fg{fill:none;stroke:var(--gold);stroke-width:8;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ring .t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;line-height:1.1}
+.ring .t small{font-size:.65em;color:var(--muted);font-weight:600}
+.flame{font-size:1.6em;display:inline-block;animation:flicker 1.2s ease-in-out infinite alternate}
+@keyframes flicker{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12) rotate(3deg)}}
+.fab{position:fixed;right:18px;bottom:calc(92px + var(--safe-b));width:62px;height:62px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1200;font-size:32px;font-weight:900;box-shadow:0 12px 30px rgba(243,201,87,.45);z-index:25;cursor:pointer;transition:transform .15s}
+.fab:active{transform:scale(.92)}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(10,22,18,.95);border-top:1px solid var(--line);padding:6px 6px calc(6px + var(--safe-b));z-index:24}
+.tabs button{flex:1;border:none;background:none;color:var(--muted);padding:6px 4px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72em;font-weight:700;cursor:pointer}
+.tabs button .ic{font-size:1.55em;line-height:1;transition:transform .2s}
+.tabs button.on{color:var(--gold)}
+.tabs button.on .ic{transform:translateY(-3px) scale(1.15)}
+/* sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:.25s;z-index:30}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:92vh;overflow:auto;background:var(--bg2);border-radius:22px 22px 0 0;padding:14px 18px calc(20px + var(--safe-b));transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:31;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+.sheet.on{transform:none}
+.sheet .grab{width:44px;height:5px;border-radius:999px;background:rgba(255,255,255,.25);margin:0 auto 10px}
+.sheet h3{margin:4px 0 10px;font-size:1.15em}
+.field{margin:10px 0}
+.field label{display:block;font-size:.8em;color:var(--muted);margin-bottom:5px;font-weight:700}
+.field input[type=number],.field input[type=date],.field input[type=text]{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--ink);font-size:1.1em;color-scheme:dark}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--ink);cursor:pointer;font-weight:700;transition:.15s}
+.chip.on{background:var(--gold);color:#1a1200;border-color:transparent;transform:scale(1.06)}
+.chip.big{font-size:1.3em;padding:6px 12px}
+.stepper{display:flex;gap:8px;align-items:center}
+.stepper input{flex:1;text-align:center}
+.stepper button{width:52px;height:48px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--gold);font-size:1.1em;font-weight:900;cursor:pointer}
+.wl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wl button{padding:12px;border-radius:14px;border:2px solid var(--line);background:var(--card2);color:var(--ink);font-weight:900;font-size:1.05em;cursor:pointer}
+.wl button.win.on{border-color:var(--green);background:rgba(57,217,138,.2);color:var(--green)}
+.wl button.loss.on{border-color:var(--red);background:rgba(255,107,122,.2);color:var(--red)}
+.btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1200;font-weight:900;font-size:1.1em;cursor:pointer;margin-top:8px}
+.btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:rgba(255,107,122,.18);color:var(--red);border:1px solid rgba(255,107,122,.4)}
+.btn:active{transform:scale(.98)}
+/* list */
+.sess{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.sess:last-child{border-bottom:none}
+.sess .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85em;flex:0 0 42px}
+.sess .ic.w{background:rgba(57,217,138,.18);color:var(--green)}.sess .ic.l{background:rgba(255,107,122,.18);color:var(--red)}
+.sess .m{flex:1;min-width:0}
+.sess .m b{display:block}
+.sess .m small{color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sess .r{text-align:right;font-weight:900}
+.sess .r small{display:block;color:var(--muted);font-weight:600}
+.chart{width:100%;height:auto;display:block}
+.heat{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.heat i{display:block;aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.07)}
+.heat i.l1{background:rgba(57,217,138,.3)}.heat i.l2{background:rgba(57,217,138,.55)}.heat i.l3{background:rgba(57,217,138,.8)}.heat i.l4{background:var(--gold)}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.badge{text-align:center;padding:8px 4px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.68em;color:var(--muted);line-height:1.3}
+.badge .e{font-size:1.9em;display:block;filter:grayscale(1);opacity:.4;margin-bottom:2px}
+.badge.on{border-color:rgba(243,201,87,.6);color:var(--ink);background:linear-gradient(180deg,rgba(243,201,87,.2),var(--card2))}
+.badge.on .e{filter:none;opacity:1;animation:pop .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{transform:scale(.4)}60%{transform:scale(1.2)}to{transform:scale(1)}}
+.insight{padding:10px 12px;border-radius:12px;background:var(--card2);border-left:4px solid var(--gold);margin:8px 0;font-size:.9em;line-height:1.55}
+.insight.good{border-color:var(--green)}.insight.bad{border-color:var(--red)}.insight.neutral{border-color:var(--blue)}
+.table{width:100%;border-collapse:collapse;font-size:.86em}
+.table th,.table td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.table th{color:var(--muted);font-weight:700}
+.scroll{overflow-x:auto}
+.toast{position:fixed;left:50%;bottom:calc(150px + var(--safe-b));transform:translate(-50%,20px);background:#1f2e27;color:#fff;padding:12px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.3s;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw;text-align:center;font-weight:700}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+.celebrate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:45;pointer-events:none;opacity:0;transition:.3s}
+.celebrate.on{opacity:1}
+.celebrate div{background:rgba(10,22,18,.92);border:1px solid rgba(243,201,87,.6);border-radius:22px;padding:22px 28px;text-align:center;box-shadow:0 0 60px rgba(243,201,87,.4);animation:pop .7s}
+.celebrate .e{font-size:3em}
+.celebrate b{display:block;font-size:1.3em;color:var(--gold);margin-top:6px}
+.shake{animation:shake .5s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.count{font-variant-numeric:tabular-nums}
+.file{display:none}
+hr.sep{border:none;border-top:1px solid var(--line);margin:12px 0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hdr"><div class="logo"></div><h1>撲克帳本</h1><span class="sp"></span><span class="pill" id="hdr-date"></span></header>
+<main>
+ <section class="view on" id="v-home"></section>
+ <section class="view" id="v-stats"></section>
+ <section class="view" id="v-insight"></section>
+ <section class="view" id="v-settings"></section>
+</main>
+<button class="fab" id="fab" aria-label="記一場">＋</button>
+<nav class="tabs">
+ <button data-v="home" class="on"><span class="ic">🏠</span>首頁</button>
+ <button data-v="stats"><span class="ic">📊</span>統計</button>
+ <button data-v="insight"><span class="ic">🧠</span>分析</button>
+ <button data-v="settings"><span class="ic">⚙️</span>設定</button>
+</nav>
+<div class="sheet-bg" id="sheet-bg"></div>
+<div class="sheet" id="sheet">
+ <div class="grab"></div>
+ <h3 id="sheet-title">記一場 🃏</h3>
+ <form id="f" autocomplete="off">
+  <input type="hidden" id="f-id">
+  <div class="field"><label>打的級別</label><div class="chips" id="f-level"></div></div>
+  <div class="grid2">
+   <div class="field"><label>日期</label><input type="date" id="f-date" required></div>
+   <div class="field"><label>時段</label><div class="chips" id="f-slot"></div></div>
+  </div>
+  <div class="field"><label>手數</label><div class="stepper"><button type="button" data-d="-100">−100</button><input type="number" id="f-hands" min="0" step="1" inputmode="numeric" placeholder="0" required><button type="button" data-d="100">+100</button></div></div>
+  <div class="field"><label>打了幾分鐘</label><div class="stepper"><button type="button" data-m="-15">−15</button><input type="number" id="f-min" min="0" step="1" inputmode="numeric" placeholder="90"><button type="button" data-m="15">+15</button></div></div>
+  <div class="field"><label>結果</label><div class="wl"><button type="button" class="win" id="f-win">😎 贏了</button><button type="button" class="loss" id="f-loss">😤 輸了</button></div></div>
+  <div class="field"><label>金額（美元，不用寫正負）</label><input type="number" id="f-amt" min="0" step="0.01" inputmode="decimal" placeholder="例如 1.5" required></div>
+  <div class="grid2">
+   <div class="field"><label>EV 結果（美元，選填）</label><input type="number" id="f-ev" step="0.01" inputmode="decimal" placeholder="PokerCraft"></div>
+   <div class="field"><label>桌數</label><input type="number" id="f-tables" min="1" max="12" step="1" value="2" inputmode="numeric"></div>
+  </div>
+  <div class="field"><label>今天的狀態</label><div class="chips" id="f-mood"></div></div>
+  <div class="field"><label>有 tilt 嗎？（情緒影響決策）</label><div class="chips" id="f-tilt"><span class="chip on" data-v="0">🧊 沒有</span><span class="chip" data-v="1">🔥 有一點</span></div></div>
+  <div class="field"><label>一句話（要復盤的事）</label><input type="text" id="f-note" maxlength="140" placeholder="例如：轉牌被 x/r 棄兩次，要查"></div>
+  <button type="submit" class="btn" id="f-save">儲存這一場 ✨</button>
+  <button type="button" class="btn ghost" id="f-cancel">取消</button>
+  <button type="button" class="btn danger" id="f-del" style="display:none">刪除這一場</button>
+ </form>
+</div>
+<div class="toast" id="toast"></div>
+<canvas id="confetti"></canvas>
+<div class="celebrate" id="celebrate"><div><span class="e" id="cel-e">🎉</span><b id="cel-t"></b><span class="sub" id="cel-s"></span></div></div>
+<script>
+(function(){
+'use strict';
+const KEY='pokerTracker.v1';
+const LEVELS=[{n:'NL2',bb:0.02,bi:2,entry:0,drop:null},{n:'NL5',bb:0.05,bi:5,entry:150,drop:100},{n:'NL10',bb:0.10,bi:10,entry:400,drop:300},{n:'NL25',bb:0.25,bi:25,entry:1000,drop:750},{n:'NL50',bb:0.50,bi:50,entry:2000,drop:1500},{n:'NL100',bb:1,bi:100,entry:4000,drop:3000}];
+const SLOTS=['早上','下午','晚上','深夜'];
+const MOODS=['😴 累','😐 普通','🙂 好','🔥 超好'];
+const GATES=[['階段 1',20000],['階段 2',50000],['階段 3',80000],['階段 4',100000]];
+const $=id=>document.getElementById(id);
+const pad=n=>(n<10?'0':'')+n;
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const today=()=>iso(new Date());
+const addDays=(ds,n)=>{const d=new Date(ds+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);};
+const daysBetween=(a,b)=>Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);
+const weekStart=ds=>{const d=new Date(ds+'T00:00:00');d.setDate(d.getDate()-((d.getDay()+6)%7));return iso(d);};
+const fmt=(x,d=0)=>{const s=Math.abs(+x||0).toFixed(d).split('.');s[0]=s[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');return ((+x||0)<0?'-':'')+s.join('.');};
+const money=x=>((+x||0)<0?'-':'')+'$'+fmt(Math.abs(+x||0),2);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const lvl=n=>LEVELS.find(l=>l.n===n)||LEVELS[0];
+const hasEv=s=>s.ev!==null&&s.ev!==undefined&&s.ev!==''&&!isNaN(+s.ev);
+const defaults=()=>({settings:{startBankroll:100,startDate:today(),weeklyGoal:3000,fx:true},sessions:[],adjustments:[],lastBackup:null,badges:[]});
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.sessions){d.adjustments=d.adjustments||[];d.settings=Object.assign(defaults().settings,d.settings||{});d.badges=d.badges||[];return d;}}catch(e){}return defaults();}
+let D=load();
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){toast('儲存失敗：'+e.message);}}
+const sorted=()=>D.sessions.slice().sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:a.id-b.id);
+const bankroll=()=>D.sessions.reduce((b,s)=>b+(+s.result||0),+D.settings.startBankroll||0)+D.adjustments.reduce((b,a)=>b+(+a.amount||0),0);
+
+/* ---------- stats ---------- */
+function stats(){
+ const ss=sorted();const t={hands:0,result:0,ev:0,evHands:0,minutes:0,sessions:ss.length,bb:0,evbb:0,byLevel:{},tilt30:0,breaches:0,best:null,worst:null,days:{},wins:0,losses:0,byWeekday:Array.from({length:7},()=>({bb:0,hands:0,n:0})),bySlot:{},tilt:{y:{bb:0,hands:0,n:0},n:{bb:0,hands:0,n:0}},byLen:{short:{bb:0,hands:0,n:0},mid:{bb:0,hands:0,n:0},long:{bb:0,hands:0,n:0}},byMood:{},resultsBI:[]};
+ const cutoff=addDays(today(),-30);let peak=+D.settings.startBankroll||0,cur=peak,dd=0,ddBI=0;let wStreak=0,lStreak=0,maxW=0,maxL=0;
+ ss.forEach(s=>{const L=lvl(s.level),h=+s.hands||0,r=+s.result||0,rb=r/L.bb;
+  t.hands+=h;t.result+=r;t.minutes+=+s.minutes||0;t.bb+=rb;if(r>=0)t.wins++;else t.losses++;
+  if(hasEv(s)){t.ev+=+s.ev;t.evHands+=h;t.evbb+=(+s.ev)/L.bb;}
+  const b=t.byLevel[s.level]||(t.byLevel[s.level]={hands:0,result:0,bb:0,ev:0,evbb:0,evHands:0,sessions:0,minutes:0});
+  b.hands+=h;b.result+=r;b.bb+=rb;b.sessions++;b.minutes+=+s.minutes||0;if(hasEv(s)){b.ev+=+s.ev;b.evbb+=(+s.ev)/L.bb;b.evHands+=h;}
+  if(s.tilt&&s.date>=cutoff)t.tilt30++;if(r<=-5*L.bi)t.breaches++;
+  if(!t.best||r>+t.best.result)t.best=s;if(!t.worst||r<+t.worst.result)t.worst=s;
+  t.days[s.date]=(t.days[s.date]||0)+h;
+  const wd=(new Date(s.date+'T00:00:00').getDay()+6)%7;t.byWeekday[wd].bb+=rb;t.byWeekday[wd].hands+=h;t.byWeekday[wd].n++;
+  if(s.slot){const o=t.bySlot[s.slot]||(t.bySlot[s.slot]={bb:0,hands:0,n:0});o.bb+=rb;o.hands+=h;o.n++;}
+  const tk=s.tilt?'y':'n';t.tilt[tk].bb+=rb;t.tilt[tk].hands+=h;t.tilt[tk].n++;
+  const m=+s.minutes||0;const lk=m<=60?'short':m<=120?'mid':'long';if(m){t.byLen[lk].bb+=rb;t.byLen[lk].hands+=h;t.byLen[lk].n++;}
+  if(s.mood){const o=t.byMood[s.mood]||(t.byMood[s.mood]={bb:0,hands:0,n:0});o.bb+=rb;o.hands+=h;o.n++;}
+  t.resultsBI.push(r/L.bi);
+  cur+=r;if(cur>peak)peak=cur;const d=peak-cur;if(d>dd){dd=d;ddBI=d/L.bi;}
+  if(r>=0){wStreak++;lStreak=0;}else{lStreak++;wStreak=0;}maxW=Math.max(maxW,wStreak);maxL=Math.max(maxL,lStreak);});
+ const rate=o=>o.hands?o.bb/o.hands*100:null;
+ t.bb100=rate(t);t.evbb100=t.evHands?t.evbb/t.evHands*100:null;
+ for(const k in t.byLevel){const b=t.byLevel[k];b.bb100=rate(b);b.evbb100=b.evHands?b.evbb/b.evHands*100:null;}
+ t.hourly=t.minutes?t.result/(t.minutes/60):null;t.ci=t.hands?1.96*100/Math.sqrt(t.hands/100):null;
+ const wk=weekStart(today()),mon=today().slice(0,7);t.weekHands=0;t.monthHands=0;t.todayHands=t.days[today()]||0;t.weekResult=0;t.monthResult=0;
+ ss.forEach(s=>{if(s.date>=wk){t.weekHands+=+s.hands||0;t.weekResult+=+s.result||0;}if(s.date.slice(0,7)===mon){t.monthHands+=+s.hands||0;t.monthResult+=+s.result||0;}});
+ t.activeDays=Object.keys(t.days).length;t.avgPerDay=t.activeDays?t.hands/t.activeDays:0;
+ let st=0,d=today();if(!t.days[d])d=addDays(d,-1);while(t.days[d]){st++;d=addDays(d,-1);}t.streak=st;
+ t.lastLevel=ss.length?ss[ss.length-1].level:null;t.maxDD=dd;t.maxDDBI=ddBI;t.maxWin=maxW;t.maxLoss=maxL;t.curW=wStreak;t.curL=lStreak;
+ t.last10=ss.slice(-10);t.last10bb=t.last10.reduce((a,s)=>a+(+s.result||0)/lvl(s.level).bb,0);t.last10hands=t.last10.reduce((a,s)=>a+(+s.hands||0),0);
+ t.rate=rate;return t;}
+
+function recommend(bank,t){let idx=0;for(let i=0;i<LEVELS.length;i++)if(bank>=LEVELS[i].entry)idx=i;const msgs=[];
+ if(idx>=3){const nl10=t.byLevel['NL10'];const wr=nl10?(nl10.evbb100!==null?nl10.evbb100:nl10.bb100):null;const ok=!!nl10&&nl10.hands>=50000&&wr!==null&&wr>=3;
+  if(!ok&&idx===3){msgs.push({c:'warn',m:`資金已到 NL25 門檻，但還需要 NL10 累計 50k 手且 EV ≥ 3 bb/100（目前 ${fmt(nl10?nl10.hands:0)} 手、${wr===null?'—':fmt(wr,1)} bb/100）。先留在 NL10。`});idx=2;}}
+ const li=LEVELS.findIndex(l=>l.n===t.lastLevel);
+ if(li>idx){if(LEVELS[li].drop!==null&&bank>=LEVELS[li].drop){idx=li;msgs.push({c:'info',m:`最近在打 ${t.lastLevel}，資金還在降級線 $${LEVELS[li].drop} 之上，可以留著。`});}
+  else msgs.push({c:'warn',m:`最近在打 ${t.lastLevel}，但資金已低於它的降級線 $${LEVELS[li].drop}。請退回 ${LEVELS[idx].n}，不要存款補。`});}
+ const L=LEVELS[idx],bis=bank/L.bi;
+ if(bis<20)msgs.push({c:'warn',m:`只有 ${fmt(bis,1)} 個買入，低於 20，破產風險很高。手數比結果重要。`});
+ if(idx===0&&bank<50)msgs.push({c:'warn',m:'資金低於 $50。教材規則：停打兩週只做研究與 Trainer，這是漏洞不是變異數。'});
+ return {level:L,next:LEVELS[idx+1]||null,bis,msgs,idx};}
+
+/* ---------- badges ---------- */
+const BADGES=[
+ {id:'first',e:'🎬',n:'第一場',t:'記下第一場',f:t=>t.sessions>=1},
+ {id:'s7',e:'🔥',n:'連 7 天',t:'連續記錄 7 天',f:t=>t.streak>=7},
+ {id:'s30',e:'🌋',n:'連 30 天',t:'連續記錄 30 天',f:t=>t.streak>=30},
+ {id:'h1k',e:'🃏',n:'1 千手',t:'累計 1,000 手',f:t=>t.hands>=1000},
+ {id:'h10k',e:'♠️',n:'1 萬手',t:'累計 10,000 手',f:t=>t.hands>=10000},
+ {id:'h50k',e:'👑',n:'5 萬手',t:'累計 50,000 手',f:t=>t.hands>=50000},
+ {id:'h100k',e:'🏆',n:'10 萬手',t:'累計 100,000 手',f:t=>t.hands>=100000},
+ {id:'week',e:'🎯',n:'週目標',t:'一週打滿目標手數',f:t=>t.weekHands>=(+D.settings.weeklyGoal||3000)},
+ {id:'calm',e:'🧊',n:'冷靜 30 天',t:'30 天內零 tilt（至少 10 場）',f:t=>t.sessions>=10&&t.tilt30===0},
+ {id:'disc',e:'🛡️',n:'停損紀律',t:'20 場以上沒有違反停損',f:t=>t.sessions>=20&&t.breaches===0},
+ {id:'nl5',e:'🥉',n:'升 NL5',t:'資金達到 $150',f:(t,b)=>b>=150},
+ {id:'nl10',e:'🥈',n:'升 NL10',t:'資金達到 $400',f:(t,b)=>b>=400},
+ {id:'nl25',e:'🥇',n:'升 NL25',t:'資金達到 $1,000',f:(t,b)=>b>=1000},
+ {id:'ev',e:'📐',n:'EV 達人',t:'填 EV 的場次達 20 場',f:()=>D.sessions.filter(hasEv).length>=20},
+ {id:'s100',e:'💯',n:'100 場',t:'累計 100 場',f:t=>t.sessions>=100},
+ {id:'double',e:'💰',n:'翻倍',t:'資金達到起始的兩倍',f:(t,b)=>b>=2*(+D.settings.startBankroll||0)&&(+D.settings.startBankroll||0)>0},
+];
+function checkBadges(t,bank){const fresh=[];BADGES.forEach(b=>{if(!D.badges.includes(b.id)&&b.f(t,bank)){D.badges.push(b.id);fresh.push(b);}});if(fresh.length)persist();return fresh;}
+
+/* ---------- views ---------- */
+function kpi(l,v,s,cls){return `<div class="kpi ${cls||''}"><div class="l">${l}</div><div class="v count">${v}</div><div class="s">${s||''}</div></div>`;}
+function renderHome(t){const bank=bankroll();const r=recommend(bank,t);const L=r.level,next=r.next;
+ const span=next?next.entry-L.entry:L.bi*40;const p=next?Math.min(100,Math.max(0,(bank-L.entry)/span*100)):100;
+ const goal=+D.settings.weeklyGoal||3000;const dayGoal=Math.round(goal/6);const dp=Math.min(100,t.todayHands/dayGoal*100);const wp=Math.min(100,t.weekHands/goal*100);
+ let h=`<div class="card"><h2><span class="em">💧</span>資金水位</h2><div class="tank"><div class="tank-wrap"><div class="tank-fill" id="tank" style="height:0%"><div class="tank-wave"></div></div><div class="tank-label"><b>${p.toFixed(0)}%</b><small>到 ${next?next.n:'上限'}</small></div></div>
+  <div style="flex:1;min-width:0"><div class="sub">目前資金</div><div class="big gold count" data-to="${bank.toFixed(2)}" data-money="1">${money(bank)}</div><div class="sub">起始 ${money(D.settings.startBankroll)} · 累計 <span class="${t.result>=0?'green':'red'}">${money(t.result)}</span></div><div style="margin-top:8px"><span class="lvl">🎰 ${L.n}</span></div><div class="sub" style="margin-top:6px">${fmt(r.bis,1)} 個買入 · 停損 $${3*L.bi} / $${5*L.bi}${next?' · 升級還差 '+money(Math.max(0,next.entry-bank)):''}</div></div></div>
+  <div class="bar"><i id="lvlbar" style="width:0%"></i></div>${r.msgs.map(m=>`<div class="msg ${m.c}">${m.m}</div>`).join('')}${(!r.msgs.length&&t.sessions)?'<div class="msg ok">資金與級別一致，照這一級打。</div>':''}</div>`;
+ h+=`<div class="card"><div class="row" style="gap:14px"><div class="ring"><svg viewBox="0 0 36 36"><circle class="bg" cx="18" cy="18" r="15.9" pathLength="100"/><circle class="fg" id="dayring" cx="18" cy="18" r="15.9" pathLength="100"/></svg><div class="t"><span class="count">${fmt(t.todayHands)}</span><small>今天手數</small></div></div>
+  <div style="flex:1;min-width:0"><div class="row" style="justify-content:space-between"><b>今天目標 ${fmt(dayGoal)} 手</b><span class="sub">${dp.toFixed(0)}%</span></div><div class="bar"><i style="width:${dp.toFixed(0)}%"></i></div><div class="row" style="justify-content:space-between;margin-top:6px"><b>本週 ${fmt(t.weekHands)} / ${fmt(goal)}</b><span class="sub">${wp.toFixed(0)}%</span></div><div class="bar"><i style="width:${wp.toFixed(0)}%"></i></div></div></div>
+  <div class="row" style="margin-top:10px;justify-content:space-between"><span><span class="flame">${t.streak>=3?'🔥':'🕯️'}</span> 連續 <b class="count">${t.streak}</b> 天有記錄</span><span class="sub">本週 <span class="${t.weekResult>=0?'green':'red'}">${money(t.weekResult)}</span></span></div></div>`;
+ h+=`<div class="card"><h2><span class="em">⚡</span>快速數字</h2><div class="grid3">${kpi('總手數',fmt(t.hands),t.sessions+' 場')}${kpi('勝率',t.bb100===null?'—':fmt(t.bb100,1),'bb/100 ±'+(t.ci===null?'—':fmt(t.ci,0)),t.bb100>=0?'green':'red')}${kpi('時薪',t.hourly===null?'—':money(t.hourly),'每小時','blue')}</div></div>`;
+ const ss=sorted().reverse().slice(0,8);
+ h+=`<div class="card"><h2><span class="em">🗂</span>最近的場次</h2>${ss.length?ss.map(sessRow).join(''):'<div class="sub">還沒有紀錄。按右下角的 ＋ 記第一場！</div>'}${D.sessions.length>8?'<div class="sub" style="margin-top:8px">更多在「統計」分頁最下面</div>':''}</div>`;
+ $('v-home').innerHTML=h;
+ requestAnimationFrame(()=>{setTimeout(()=>{const tk=$('tank');if(tk)tk.style.height=p.toFixed(0)+'%';const lb=$('lvlbar');if(lb)lb.style.width=p.toFixed(0)+'%';const dr=$('dayring');if(dr)dr.style.strokeDashoffset=100-dp;},60);});
+ countUp($('v-home'));}
+function sessRow(s){const r=+s.result||0;return `<div class="sess" data-id="${s.id}"><div class="ic ${r>=0?'w':'l'}">${s.level}</div><div class="m"><b>${s.date} · ${fmt(s.hands)} 手${s.minutes?' · '+s.minutes+' 分':''}</b><small>${s.slot?s.slot+' · ':''}${s.mood?s.mood+' · ':''}${s.tilt?'🔥 tilt · ':''}${esc(s.note)||'—'}</small></div><div class="r ${r>=0?'green':'red'}">${money(r)}<small>${hasEv(s)?'EV '+money(+s.ev):''}</small></div></div>`;}
+
+function renderStats(t){const goal=+D.settings.weeklyGoal||3000;
+ let h=`<div class="card"><h2><span class="em">📈</span>資金走勢</h2>${lineChart()}</div>`;
+ h+=`<div class="card"><h2><span class="em">📊</span>核心數字</h2><div class="grid2">${kpi('總手數',fmt(t.hands),`${t.sessions} 場 · ${t.activeDays} 天`)}${kpi('本月手數',fmt(t.monthHands),'本月 '+money(t.monthResult),t.monthResult>=0?'green':'red')}${kpi('勝率 bb/100',t.bb100===null?'—':fmt(t.bb100,1),'95% 區間 ±'+(t.ci===null?'—':fmt(t.ci,1)),t.bb100>=0?'green':'red')}${kpi('EV 勝率',t.evbb100===null?'—':fmt(t.evbb100,1),t.evHands?'有 EV 的 '+fmt(t.evHands)+' 手':'填 EV 才會有','purple')}${kpi('時薪',t.hourly===null?'—':money(t.hourly),fmt(t.minutes/60,1)+' 小時','blue')}${kpi('贏／輸場',`${t.wins} / ${t.losses}`,t.sessions?Math.round(t.wins/t.sessions*100)+'% 的場次是贏的':'')}${kpi('最長連贏',t.maxWin+' 場','目前 '+(t.curW?'連贏 '+t.curW:'連輸 '+t.curL),'green')}${kpi('最大回撤',money(-t.maxDD),fmt(t.maxDDBI,1)+' 個買入','red')}</div></div>`;
+ h+=`<div class="card"><h2><span class="em">📅</span>每天手數（最近 12 週）</h2>${heatmap(t)}<div class="sub" style="margin-top:6px">顏色越亮手數越多；金色是單日 ${fmt(Math.round(goal/6)*2)} 手以上</div></div>`;
+ h+=`<div class="card"><h2><span class="em">🗓</span>最近 28 天</h2>${barChart(t)}</div>`;
+ const keys=LEVELS.map(l=>l.n).filter(k=>t.byLevel[k]);
+ if(keys.length)h+=`<div class="card"><h2><span class="em">🎚</span>各級別</h2><div class="scroll"><table class="table"><thead><tr><th>級別</th><th>手數</th><th>結果</th><th>bb/100</th><th>EV</th><th>場</th><th>時</th></tr></thead><tbody>${keys.map(k=>{const b=t.byLevel[k];return `<tr><td><b>${k}</b></td><td>${fmt(b.hands)}</td><td class="${b.result>=0?'green':'red'}">${money(b.result)}</td><td>${b.bb100===null?'—':fmt(b.bb100,1)}</td><td>${b.evbb100===null?'—':fmt(b.evbb100,1)}</td><td>${b.sessions}</td><td>${fmt(b.minutes/60,1)}</td></tr>`;}).join('')}</tbody></table></div></div>`;
+ h+=`<div class="card"><h2><span class="em">🏁</span>階段門檻</h2>${GATES.map(g=>{const p=Math.min(100,t.hands/g[1]*100);return `<div class="row" style="justify-content:space-between;margin-top:6px"><b>${g[0]} · ${fmt(g[1])} 手</b><span class="sub">${t.hands>=g[1]?'✓ 達標':'還差 '+fmt(g[1]-t.hands)}</span></div><div class="bar"><i style="width:${p.toFixed(0)}%"></i></div>`;}).join('')}</div>`;
+ const all=sorted().reverse();
+ h+=`<div class="card"><h2><span class="em">🗂</span>所有場次（${all.length}）<span class="sub" style="text-transform:none;float:right">點一場可以修改</span></h2>${all.slice(0,100).map(sessRow).join('')||'<div class="sub">還沒有紀錄</div>'}${all.length>100?'<div class="sub">只顯示最近 100 場，全部都在備份檔裡</div>':''}</div>`;
+ $('v-stats').innerHTML=h;countUp($('v-stats'));}
+
+function lineChart(){const ss=sorted();const ev=[];ss.forEach(s=>ev.push({date:s.date,amt:+s.result||0,id:s.id}));D.adjustments.forEach(a=>ev.push({date:a.date,amt:+a.amount||0,id:a.id}));ev.sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:x.id-y.id);
+ let b=+D.settings.startBankroll||0;const pts=[b];ev.forEach(e=>{b+=e.amt;pts.push(b);});if(pts.length<2)return '<div class="sub">記兩場以上就會有走勢圖</div>';
+ const W=600,H=220,P=30;let mn=Math.min(...pts),mx=Math.max(...pts);if(mx===mn){mx+=1;mn-=1;}const pd=(mx-mn)*.12;mn-=pd;mx+=pd;
+ const sx=i=>P+(W-2*P)*i/(pts.length-1),sy=v=>H-P-(H-2*P)*(v-mn)/(mx-mn);
+ const d=pts.map((v,i)=>(i?'L':'M')+sx(i).toFixed(1)+','+sy(v).toFixed(1)).join(' ');const area=d+` L${sx(pts.length-1).toFixed(1)},${H-P} L${P},${H-P} Z`;const s0=sy(+D.settings.startBankroll||0);
+ return `<svg class="chart" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#39d98a" stop-opacity=".45"/><stop offset="1" stop-color="#39d98a" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#g)"/><line x1="${P}" y1="${s0.toFixed(1)}" x2="${W-P}" y2="${s0.toFixed(1)}" stroke="rgba(255,255,255,.3)" stroke-dasharray="4 4"/><path d="${d}" fill="none" stroke="#f3c957" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" pathLength="1" style="stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.4s ease forwards"/><circle cx="${sx(pts.length-1).toFixed(1)}" cy="${sy(pts[pts.length-1]).toFixed(1)}" r="6" fill="#f3c957"><animate attributeName="r" values="5;8;5" dur="1.6s" repeatCount="indefinite"/></circle><text x="${P}" y="${P-10}" fill="#9fb0a7" font-size="12">最高 ${money(Math.max(...pts))}</text><text x="${P}" y="${H-P+18}" fill="#9fb0a7" font-size="12">最低 ${money(Math.min(...pts))}</text><text x="${W-P}" y="${H-P+18}" fill="#f3c957" font-size="12" text-anchor="end" font-weight="700">現在 ${money(b)}</text><style>@keyframes draw{to{stroke-dashoffset:0}}</style></svg>`;}
+function barChart(t){const days=[];for(let i=27;i>=0;i--)days.push(addDays(today(),-i));const vals=days.map(d=>t.days[d]||0);const mx=Math.max(1,...vals);const tot=vals.reduce((a,b)=>a+b,0);const W=600,H=150,P=26,bw=(W-2*P)/28;
+ return `<div class="sub">合計 ${fmt(tot)} 手 · 單日最多 ${fmt(mx)}</div><svg class="chart" viewBox="0 0 ${W} ${H}">${vals.map((v,i)=>{const bh=(H-2*P)*v/mx;return `<rect x="${(P+i*bw+1).toFixed(1)}" y="${(H-P-bh).toFixed(1)}" width="${(bw-2).toFixed(1)}" height="${Math.max(bh,2).toFixed(1)}" rx="3" fill="${v?(i===27?'#f3c957':'#39d98a'):'rgba(255,255,255,.08)'}"><animate attributeName="height" from="0" to="${Math.max(bh,2).toFixed(1)}" dur=".8s" fill="freeze"/><animate attributeName="y" from="${H-P}" to="${(H-P-bh).toFixed(1)}" dur=".8s" fill="freeze"/></rect>`;}).join('')}<text x="${P}" y="${H-P+16}" fill="#9fb0a7" font-size="11">${days[0].slice(5)}</text><text x="${W-P}" y="${H-P+16}" fill="#9fb0a7" font-size="11" text-anchor="end">今天</text></svg>`;}
+function heatmap(t){const goal=+D.settings.weeklyGoal||3000;const dayGoal=Math.round(goal/6);const start=addDays(weekStart(today()),-77);const cells=[];for(let w=0;w<12;w++){for(let d=0;d<7;d++){const ds=addDays(start,w*7+d);const v=t.days[ds]||0;let c='';if(v>0)c=v>=dayGoal*2?'l4':v>=dayGoal?'l3':v>=dayGoal/2?'l2':'l1';if(ds>today())c='';cells.push({ds,v,c});}}
+ // layout: columns=weeks, rows=weekdays -> grid with 12 columns and 7 rows
+ let h='<div class="heat">';for(let d=0;d<7;d++){for(let w=0;w<12;w++){const cell=cells[w*7+d];h+=`<i class="${cell.c}" title="${cell.ds} ${cell.v} 手"></i>`;}}h+='</div>';return h;}
+
+function renderInsight(t){const bank=bankroll();const r=recommend(bank,t);const ins=[];
+ const n=t.sessions;
+ if(n===0){$('v-insight').innerHTML='<div class="card"><h2><span class="em">🧠</span>分析</h2><div class="sub">記幾場之後，這裡會自動告訴你：tilt 對你的影響、哪個時段打得好、打太久會不會變差、離升級還要多久、有沒有在下風期。</div></div>';return;}
+ // sample warning
+ if(t.hands<10000)ins.push({c:'neutral',m:`樣本提醒：目前 ${fmt(t.hands)} 手，勝率的誤差是 ±${fmt(t.ci,0)} bb/100，數字幾乎沒有意義。現在看流程：手數、停損、tilt。到 1 萬手誤差 ±20、5 萬手 ±9、10 萬手 ±6。`});
+ else ins.push({c:'neutral',m:`樣本：${fmt(t.hands)} 手，勝率 ${fmt(t.bb100,1)} ± ${fmt(t.ci,1)} bb/100（95%）。${t.hands>=50000?'已經可以拿來對照升級門檻。':'到 5 萬手再對照升級門檻。'}`});
+ // projection
+ if(r.next&&t.hands>=2000&&t.bb100!==null){const wr=t.evbb100!==null?t.evbb100:t.bb100;const need=r.next.entry-bank;if(need>0){if(wr>0){const bbNeed=need/r.level.bb;const handsNeed=bbNeed/wr*100;const days=t.avgPerDay?handsNeed/t.avgPerDay:null;ins.push({c:'good',m:`升級預估：以目前勝率 ${fmt(wr,1)} bb/100 與每個打牌日 ${fmt(t.avgPerDay)} 手，升到 ${r.next.n} 還需要約 ${fmt(handsNeed)} 手${days?'（約 '+fmt(days)+' 個打牌日）':''}。變異數會讓實際差很多，當作方向就好。`});}
+  else ins.push({c:'bad',m:`目前勝率是負的，照這樣打不會升級。先回教材的漏洞診斷表（第 13 章 §7）找原因，不要加碼。`});}}
+ // downswing
+ if(t.last10.length>=10){const l10=t.last10bb/t.last10hands*100;if(l10<-15&&t.bb100>l10)ins.push({c:'bad',m:`最近 10 場勝率 ${fmt(l10,1)} bb/100，明顯低於整體。可能是下風期，也可能有新漏洞。做法：照流程、守停損、不升級、這週多復盤 10 手。`});else if(l10>t.bb100+10)ins.push({c:'good',m:`最近 10 場勝率 ${fmt(l10,1)} bb/100，高於整體。上風期也要守紀律：不要因為贏就升級，資金階梯說了算。`});}
+ if(t.maxDDBI>=10)ins.push({c:'bad',m:`歷史最大回撤 ${money(-t.maxDD)}（${fmt(t.maxDDBI,1)} 個買入）。一個 5 bb/100 的贏家一年內遇到 15–20 個買入的回撤很正常，這就是為什麼要 40 個買入才升級。`});
+ // tilt
+ const ty=t.tilt.y,tn=t.tilt.n;if(ty.n>=3&&tn.n>=3){const a=t.rate(ty),b=t.rate(tn);ins.push({c:a<b?'bad':'good',m:`tilt 的影響：有 tilt 的 ${ty.n} 場勝率 ${fmt(a,1)} bb/100，沒 tilt 的 ${tn.n} 場 ${fmt(b,1)} bb/100。${a<b?'差 '+fmt(b-a,1)+' bb/100。出現 tilt 早期信號就停，這是最便宜的改善。':'目前看不出 tilt 傷害，但樣本小，繼續誠實記。'}`});}
+ else if(t.tilt30>0)ins.push({c:'neutral',m:`近 30 天有 ${t.tilt30} 場 tilt。再多記幾場，就能算出 tilt 對你的勝率影響多少。`});
+ // length
+ const bl=t.byLen;const lens=['short','mid','long'].filter(k=>bl[k].n>=3);if(lens.length>=2){const best=lens.reduce((a,k)=>t.rate(bl[k])>t.rate(bl[a])?k:a);const worst=lens.reduce((a,k)=>t.rate(bl[k])<t.rate(bl[a])?k:a);const nm={short:'60 分鐘以內',mid:'61–120 分鐘',long:'超過 120 分鐘'};ins.push({c:worst==='long'?'bad':'neutral',m:`場次長度：${nm[best]} 的場次最好（${fmt(t.rate(bl[best]),1)} bb/100），${nm[worst]} 最差（${fmt(t.rate(bl[worst]),1)}）。${worst==='long'?'打太久會變差，教材建議一場 90–120 分鐘就休息。':''}`});}
+ // slot
+ const slots=Object.keys(t.bySlot).filter(k=>t.bySlot[k].n>=3);if(slots.length>=2){const best=slots.reduce((a,k)=>t.rate(t.bySlot[k])>t.rate(t.bySlot[a])?k:a);const worst=slots.reduce((a,k)=>t.rate(t.bySlot[k])<t.rate(t.bySlot[a])?k:a);ins.push({c:'neutral',m:`時段：${best}打得最好（${fmt(t.rate(t.bySlot[best]),1)} bb/100），${worst}最差（${fmt(t.rate(t.bySlot[worst]),1)}）。${worst==='深夜'?'深夜通常是疲勞加上對手更鬆，不一定是好事。':''}`});}
+ // weekday
+ const wds=t.byWeekday.map((o,i)=>({i,o})).filter(x=>x.o.n>=3);if(wds.length>=3){const names=['一','二','三','四','五','六','日'];const best=wds.reduce((a,x)=>t.rate(x.o)>t.rate(a.o)?x:a);const worst=wds.reduce((a,x)=>t.rate(x.o)<t.rate(a.o)?x:a);ins.push({c:'neutral',m:`星期：週${names[best.i]}最好（${fmt(t.rate(best.o),1)}），週${names[worst.i]}最差（${fmt(t.rate(worst.o),1)}）。週末的休閒玩家多，理論上應該更好打。`});}
+ // mood
+ const moods=Object.keys(t.byMood).filter(k=>t.byMood[k].n>=3);if(moods.length>=2){const best=moods.reduce((a,k)=>t.rate(t.byMood[k])>t.rate(t.byMood[a])?k:a);const worst=moods.reduce((a,k)=>t.rate(t.byMood[k])<t.rate(t.byMood[a])?k:a);ins.push({c:'neutral',m:`狀態：「${best}」時 ${fmt(t.rate(t.byMood[best]),1)} bb/100，「${worst}」時 ${fmt(t.rate(t.byMood[worst]),1)}。${worst.includes('累')?'累的時候不要打，這是數據說的。':''}`});}
+ // discipline
+ ins.push({c:t.breaches?'bad':'good',m:t.breaches?`停損紀律：有 ${t.breaches} 場輸超過 5 個買入。停損是為了保護資金，不是懲罰。輸到 3 個買入就休息 15 分鐘。`:`停損紀律：${n} 場裡沒有任何一場輸超過 5 個買入。這是職業的習慣。`});
+ // volume
+ const goal=+D.settings.weeklyGoal||3000;ins.push({c:t.weekHands>=goal?'good':'neutral',m:`量：本週 ${fmt(t.weekHands)} / ${fmt(goal)} 手，平均每個打牌日 ${fmt(t.avgPerDay)} 手。照教材一週 2,500–3,500 手，一年約 15 萬手。`});
+ // ev vs actual
+ if(t.evHands>=2000&&t.evbb100!==null){const diff=t.bb100-t.evbb100;ins.push({c:Math.abs(diff)<5?'neutral':diff<0?'bad':'good',m:`運氣：實際 ${fmt(t.bb100,1)} vs EV ${fmt(t.evbb100,1)} bb/100，差 ${fmt(diff,1)}。${diff<-5?'你最近比較倒楣，決策品質比結果好，不要因此改打法。':diff>5?'你最近比較幸運，別把運氣當實力。':'運氣中性，結果大致反映實力。'}`});}
+ // distribution
+ if(t.resultsBI.length>=10){const big=t.resultsBI.filter(x=>Math.abs(x)>=3).length;ins.push({c:'neutral',m:`波動：${n} 場裡有 ${big} 場單場輸贏超過 3 個買入（${Math.round(big/n*100)}%）。微額現金桌一場通常在 ±2 個買入內，太多大波動代表 all-in 太多或桌數太多。`});}
+ const fresh=D.badges;
+ let h=`<div class="card"><h2><span class="em">🧠</span>自動分析（${ins.length} 條）</h2>${ins.map(i=>`<div class="insight ${i.c}">${i.m}</div>`).join('')}</div>`;
+ h+=`<div class="card"><h2><span class="em">🏅</span>成就 ${fresh.length} / ${BADGES.length}</h2><div class="badges">${BADGES.map(b=>`<div class="badge ${fresh.includes(b.id)?'on':''}" title="${b.t}"><span class="e">${b.e}</span>${b.n}</div>`).join('')}</div></div>`;
+ $('v-insight').innerHTML=h;}
+
+function renderSettings(){const s=D.settings;const bk=D.lastBackup?`上次備份：${D.lastBackup}（${daysBetween(D.lastBackup,today())} 天前）`:'還沒備份過';
+ let h=`<div class="card"><h2><span class="em">⚙️</span>設定</h2><form id="sf"><div class="grid2"><div class="field"><label>起始資金（美元）</label><input type="number" id="s-start" step="0.01" value="${s.startBankroll}"></div><div class="field"><label>開始日期</label><input type="date" id="s-date" value="${s.startDate||today()}"></div></div><div class="field"><label>每週手數目標</label><input type="number" id="s-goal" step="100" value="${s.weeklyGoal||3000}"></div><div class="field"><label>特效（彩帶、震動、慶祝）</label><div class="chips" id="s-fx"><span class="chip ${s.fx!==false?'on':''}" data-v="1">✨ 開</span><span class="chip ${s.fx===false?'on':''}" data-v="0">🔇 關</span></div></div><button class="btn" type="submit">儲存設定</button></form></div>`;
+ h+=`<div class="card"><h2><span class="em">🏦</span>存款／提款</h2><div class="sub">存款填正數、提款填負數。會改變資金，但不算進勝率。</div><form id="af"><div class="grid2"><div class="field"><label>日期</label><input type="date" id="a-date" value="${today()}"></div><div class="field"><label>金額</label><input type="number" id="a-amt" step="0.01" inputmode="decimal" placeholder="+50 或 -30"></div></div><div class="field"><label>說明</label><input type="text" id="a-note" maxlength="60" placeholder="例如：第一次存款"></div><button class="btn ghost" type="submit">加入</button></form>${D.adjustments.length?`<hr class="sep"><table class="table"><tbody>${D.adjustments.slice().sort((a,b)=>a.date<b.date?1:-1).map(a=>`<tr><td>${a.date}</td><td class="${+a.amount>=0?'green':'red'}">${money(+a.amount)}</td><td style="white-space:normal">${esc(a.note)}</td><td><button type="button" class="chip" data-adel="${a.id}">刪</button></td></tr>`).join('')}</tbody></table>`:''}</div>`;
+ h+=`<div class="card"><h2><span class="em">💾</span>備份</h2><div class="sub">資料只存在這台裝置，刪 App 或換手機就不見。每週匯出一次，存到 iCloud 雲碟。${bk}</div><button class="btn" id="b-export" type="button">匯出備份檔（JSON）</button><button class="btn ghost" id="b-csv" type="button">匯出 CSV（Excel 可開）</button><label class="btn ghost" style="display:block;text-align:center">從備份檔還原<input type="file" id="b-import" class="file" accept=".json,application/json"></label><button class="btn danger" id="b-reset" type="button">清除這台裝置的所有紀錄</button></div>`;
+ h+=`<div class="card"><h2><span class="em">ℹ️</span>關於</h2><div class="sub">撲克帳本是「NL25 → 職業選手」教材的配套 App。資金階梯、停損、升級門檻都照教材：NL2 → $150 升 NL5 → $400 升 NL10 → $1,000 且 NL10 五萬手 EV ≥ 3 升 NL25。</div><div class="sub" style="margin-top:6px"><a href="../index.html" style="color:var(--gold)">打開教材 →</a></div>${(/iP(hone|ad|od)/.test(navigator.userAgent)&&!navigator.standalone)?'<div class="msg warn">你在 Safari 裡。Safari 和主畫面 App 的資料是分開的，請把這個 App 加到主畫面（分享 → 加入主畫面）並固定在那裡記錄。</div>':''}</div>`;
+ $('v-settings').innerHTML=h;
+ $('sf').addEventListener('submit',e=>{e.preventDefault();D.settings.startBankroll=Math.round((parseFloat($('s-start').value)||0)*100)/100;D.settings.startDate=$('s-date').value||today();D.settings.weeklyGoal=parseInt($('s-goal').value,10)||3000;D.settings.fx=$('s-fx').querySelector('.on').dataset.v==='1';persist();render();toast('設定已儲存 ✓');});
+ chipsBind($('s-fx'));
+ $('af').addEventListener('submit',e=>{e.preventDefault();const a={id:Date.now(),date:$('a-date').value||today(),amount:Math.round((parseFloat($('a-amt').value)||0)*100)/100,note:$('a-note').value.trim()};if(!a.amount){toast('金額不能是 0');return;}D.adjustments.push(a);persist();render();toast((a.amount>0?'存款':'提款')+' '+money(Math.abs(a.amount))+' 已記錄');});
+ $('v-settings').querySelectorAll('[data-adel]').forEach(b=>b.addEventListener('click',()=>{if(confirm('刪除這筆存提款？')){D.adjustments=D.adjustments.filter(a=>a.id!==+b.dataset.adel);persist();render();}}));
+ $('b-export').addEventListener('click',()=>{dl(new Blob([JSON.stringify({app:'poker-tracker',version:1,exportedAt:new Date().toISOString(),data:D},null,1)],{type:'application/json'}),'poker-tracker-'+today()+'.json');D.lastBackup=today();persist();render();toast('備份檔已匯出 ✓');});
+ $('b-csv').addEventListener('click',()=>{const rows=[['date','level','hands','minutes','result_usd','ev_usd','tables','slot','mood','tilt','note']];sorted().forEach(s=>rows.push([s.date,s.level,s.hands,s.minutes||'',s.result,hasEv(s)?s.ev:'',s.tables||'',s.slot||'',s.mood||'',s.tilt?1:0,String(s.note||'').replace(/"/g,'""')]));dl(new Blob(['﻿'+rows.map(r=>r.map(c=>'"'+String(c)+'"').join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),'poker-sessions-'+today()+'.csv');});
+ $('b-import').addEventListener('change',function(){const f=this.files[0],inp=this;if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const d=j.data||j;if(!d||!d.sessions)throw new Error('這不是本 App 匯出的備份檔');if(confirm(`還原會覆蓋這台裝置目前的 ${D.sessions.length} 筆紀錄，改成備份檔的 ${d.sessions.length} 筆。確定？`)){D=d;D.adjustments=D.adjustments||[];D.settings=Object.assign(defaults().settings,D.settings||{});D.badges=D.badges||[];persist();render();toast('已還原 '+D.sessions.length+' 筆 ✓');}}catch(e){alert('還原失敗：'+e.message);}inp.value='';};r.readAsText(f);});
+ $('b-reset').addEventListener('click',()=>{if(confirm('確定要清除這台裝置的所有紀錄？建議先匯出備份。')&&confirm('真的要清除？這無法復原。')){D=defaults();persist();render();toast('已清除');}});}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);}
+
+/* ---------- render / nav ---------- */
+function render(){const t=stats();renderHome(t);renderStats(t);renderInsight(t);renderSettings();document.querySelectorAll('.sess').forEach(el=>el.addEventListener('click',()=>openSheet(+el.dataset.id)));$('hdr-date').textContent=today().slice(5).replace('-','/');}
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));window.scrollTo({top:0});if(v==='home')render();}
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
+
+/* ---------- count up ---------- */
+function countUp(root){if(D.settings.fx===false)return;root.querySelectorAll('.count').forEach(el=>{const txt=el.textContent;const m=txt.match(/-?[\d,]+(\.\d+)?/);if(!m)return;const target=parseFloat(m[0].replace(/,/g,''));if(isNaN(target))return;const dec=(m[0].split('.')[1]||'').length;const pre=txt.slice(0,m.index),post=txt.slice(m.index+m[0].length);const t0=performance.now(),dur=900;function step(now){const p=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-p,3);el.textContent=pre+fmt(target*e,dec)+post;if(p<1)requestAnimationFrame(step);else el.textContent=txt;}requestAnimationFrame(step);});}
+
+/* ---------- sheet / form ---------- */
+function chipsBind(c){c.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{c.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));ch.classList.add('on');buzz(8);}));}
+function chipsVal(c){const on=c.querySelector('.chip.on');return on?on.dataset.v:'';}
+function chipsSet(c,v){c.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.dataset.v===String(v)));}
+$('f-level').innerHTML=LEVELS.map(l=>`<span class="chip" data-v="${l.n}">${l.n}</span>`).join('');
+$('f-slot').innerHTML=SLOTS.map(s=>`<span class="chip" data-v="${s}">${s}</span>`).join('');
+$('f-mood').innerHTML=MOODS.map(m=>`<span class="chip big" data-v="${m}">${m}</span>`).join('');
+['f-level','f-slot','f-mood','f-tilt'].forEach(id=>chipsBind($(id)));
+let sign=1;
+$('f-win').addEventListener('click',()=>{sign=1;$('f-win').classList.add('on');$('f-loss').classList.remove('on');buzz(8);});
+$('f-loss').addEventListener('click',()=>{sign=-1;$('f-loss').classList.add('on');$('f-win').classList.remove('on');buzz(8);});
+document.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('click',()=>{const i=$('f-hands');i.value=Math.max(0,(parseInt(i.value,10)||0)+parseInt(b.dataset.d,10));buzz(6);}));
+document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{const i=$('f-min');i.value=Math.max(0,(parseInt(i.value,10)||0)+parseInt(b.dataset.m,10));buzz(6);}));
+function defaultSlot(){const h=new Date().getHours();return h<12?'早上':h<18?'下午':h<23?'晚上':'深夜';}
+function openSheet(id){const s=id?D.sessions.find(x=>x.id===id):null;$('f').reset();$('f-id').value=s?s.id:'';$('sheet-title').textContent=s?'修改這一場 ✏️':'記一場 🃏';$('f-del').style.display=s?'':'none';
+ const t=stats();const lv=s?s.level:(t.lastLevel||recommend(bankroll(),t).level.n);chipsSet($('f-level'),lv);$('f-date').value=s?s.date:today();chipsSet($('f-slot'),s?(s.slot||''):defaultSlot());
+ $('f-hands').value=s?s.hands:'';$('f-min').value=s?(s.minutes||''):'';sign=s?(+s.result<0?-1:1):1;$('f-win').classList.toggle('on',sign===1);$('f-loss').classList.toggle('on',sign===-1);$('f-amt').value=s?Math.abs(+s.result):'';$('f-ev').value=s&&hasEv(s)?s.ev:'';$('f-tables').value=s?(s.tables||2):2;chipsSet($('f-mood'),s?(s.mood||''):'');chipsSet($('f-tilt'),s&&s.tilt?1:0);$('f-note').value=s?(s.note||''):'';
+ $('sheet').classList.add('on');$('sheet-bg').classList.add('on');setTimeout(()=>{if(!s)$('f-hands').focus();},350);}
+function closeSheet(){$('sheet').classList.remove('on');$('sheet-bg').classList.remove('on');}
+$('fab').addEventListener('click',()=>{buzz(10);openSheet(null);});
+$('sheet-bg').addEventListener('click',closeSheet);$('f-cancel').addEventListener('click',closeSheet);
+$('f-del').addEventListener('click',()=>{const id=+$('f-id').value;if(id&&confirm('刪除這一場？')){D.sessions=D.sessions.filter(x=>x.id!==id);persist();closeSheet();render();toast('已刪除');}});
+$('f').addEventListener('submit',e=>{e.preventDefault();const id=$('f-id').value?+$('f-id').value:Date.now();const before=recommend(bankroll(),stats()).idx;const amt=Math.abs(parseFloat($('f-amt').value)||0);
+ const s={id,date:$('f-date').value||today(),level:chipsVal($('f-level'))||'NL2',slot:chipsVal($('f-slot')),hands:Math.max(0,parseInt($('f-hands').value,10)||0),minutes:Math.max(0,parseInt($('f-min').value,10)||0),result:Math.round(sign*amt*100)/100,ev:$('f-ev').value===''?null:Math.round((parseFloat($('f-ev').value)||0)*100)/100,tables:parseInt($('f-tables').value,10)||1,mood:chipsVal($('f-mood')),tilt:chipsVal($('f-tilt'))==='1',note:$('f-note').value.trim()};
+ if(!s.hands){toast('手數要填喔');$('f-hands').focus();return;}
+ const isNew=!D.sessions.some(x=>x.id===id);D.sessions=D.sessions.filter(x=>x.id!==id);D.sessions.push(s);persist();closeSheet();show('home');
+ const t=stats();const bank=bankroll();const after=recommend(bank,t);const fresh=checkBadges(t,bank);render();
+ if(isNew)celebrateSave(s,t,before,after,fresh);else toast('已更新 ✓');});
+
+/* ---------- fun ---------- */
+const WIN_MSG=['漂亮，記下來了 ✨','穩穩的，繼續照流程 👍','好結果，但記得：決策比結果重要 🧠','資金水位上升中 💧','這就是紀律的回報 🛡️'];
+const LOSS_MSG=['記下來就是勝利，輸的場最值得復盤 📝','變異數是職業的一部分，你做對的是照規則記錄 🧊','今天的輸是明天復盤的材料 🔍','守住停損就是贏 🛡️','下一場是獨立事件，深呼吸 🌬️'];
+function celebrateSave(s,t,before,after,fresh){const fx=D.settings.fx!==false;const win=+s.result>=0;
+ if(after.idx>before){cel('🚀','升級！現在可以打 '+after.level.n,'資金階梯說的，不是手感說的。買入 $'+after.level.bi+'，停損 $'+(3*after.level.bi)+' / $'+(5*after.level.bi));if(fx){confetti(220);buzz([30,40,30,40,80]);}return;}
+ if(after.idx<before){toast('⚠ 資金低於降級線，現在該打 '+after.level.n);if(fx)buzz([60,40,60]);return;}
+ if(fresh.length){cel(fresh[0].e,'成就解鎖：'+fresh[0].n,fresh[0].t);if(fx){confetti(160);buzz([20,30,20]);}return;}
+ if(win){toast(WIN_MSG[Math.floor(Math.random()*WIN_MSG.length)]);if(fx){confetti(+s.result>=3*lvl(s.level).bi?200:90);buzz([15,30,15]);}}
+ else{toast(LOSS_MSG[Math.floor(Math.random()*LOSS_MSG.length)]);if(fx){document.querySelector('.hdr').classList.add('shake');setTimeout(()=>document.querySelector('.hdr').classList.remove('shake'),600);buzz(20);}}
+ if(t.streak>=3&&t.streak%7===0)setTimeout(()=>toast('🔥 連續 '+t.streak+' 天記錄！'),1600);}
+function cel(e,title,sub){$('cel-e').textContent=e;$('cel-t').textContent=title;$('cel-s').textContent=sub||'';const c=$('celebrate');c.classList.add('on');setTimeout(()=>c.classList.remove('on'),2600);}
+let toastT;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2200);}
+function buzz(p){if(D.settings.fx===false)return;try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+function confetti(n){const cv=$('confetti');const ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;const cols=['#f3c957','#39d98a','#ffffff','#ff6b7a','#6cb8ff'];const ps=[];for(let i=0;i<n;i++)ps.push({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.45,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,g:.35+Math.random()*.2,s:4+Math.random()*6,c:cols[i%cols.length],r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,sym:Math.random()<.25?'♠♥♦♣'[i%4]:null});
+ const t0=performance.now();function frame(now){const el=(now-t0)/1000;ctx.clearRect(0,0,cv.width,cv.height);let alive=false;ps.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=p.vr;if(p.y<cv.height+20)alive=true;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.globalAlpha=Math.max(0,1-el/2.2);ctx.fillStyle=p.c;if(p.sym){ctx.font=(p.s*2.2)+'px serif';ctx.fillText(p.sym,-p.s,p.s);}else ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore();});if(alive&&el<2.4)requestAnimationFrame(frame);else ctx.clearRect(0,0,cv.width,cv.height);}requestAnimationFrame(frame);}
+
+/* ---------- boot ---------- */
+render();
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){navigator.serviceWorker.register('sw.js').then(reg=>{reg.addEventListener('updatefound',()=>{const nw=reg.installing;if(!nw)return;nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&navigator.serviceWorker.controller){const t=$('toast');t.textContent='有新版本，點一下更新';t.classList.add('on');t.style.pointerEvents='auto';t.onclick=()=>location.reload();}});});}).catch(()=>{});}
+})();
+</script>
+</body>
+</html>

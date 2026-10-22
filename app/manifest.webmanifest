@@ -1,0 +1,16 @@
+{
+  "name": "撲克帳本：打牌紀錄與資金儀表板",
+  "short_name": "撲克帳本",
+  "description": "記錄每一場的手數與結果，自動算資金水位、該打的級別、勝率與分析",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1612",
+  "theme_color": "#0a1612",
+  "lang": "zh-Hant",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

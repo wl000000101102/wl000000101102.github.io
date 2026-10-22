@@ -1,5 +1,5 @@
-// 自動產生：版本 59c6364b2e
-const VERSION = 'poker-59c6364b2e';
+// 自動產生：版本 6771de5de6
+const VERSION = 'poker-6771de5de6';
 const ASSETS = ["basics.html", "glossary.html", "index.html", "10.html", "tracker.html", "01.html", "02.html", "03.html", "04.html", "05.html", "06.html", "07.html", "08.html", "09.html", "install.html", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png"];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS.map(a => new Request(a, {cache: 'reload'})))).then(() => self.skipWaiting()));
